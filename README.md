@@ -244,3 +244,77 @@ It ensures the foundational GCP resources and permissions exist so Terraform can
   --bucket tf-state--bucket \
   --location asia-south1123 \
   --create-bootstrap-project
+```
+---
+
+##  Bootstrap & Authentication Setup (Before Running Terraform)
+
+Before executing any Terraform commands, ensure your local environment is **clean** and properly configured for **service account impersonation**.  
+Terraform in this repository runs **without downloading keys**, using **GCP service account impersonation** for security and compliance.
+
+###  Step 1: Clean up any stale or cached credentials
+
+```bash
+unset GOOGLE_CLOUD_QUOTA_PROJECT
+unset GOOGLE_IMPERSONATE_SERVICE_ACCOUNT
+unset GOOGLE_PROJECT
+unset GOOGLE_APPLICATION_CREDENTIALS
+unset GOOGLE_OAUTH_ACCESS_TOKEN
+unset CLOUDSDK_CORE_PROJECT
+
+gcloud config unset auth/impersonate_service_account || true
+gcloud auth revoke --all -q || true
+gcloud auth application-default revoke -q || true
+gcloud config unset project
+rm -f ~/.config/gcloud/application_default_credentials.json
+
+gcloud config configurations create clean --no-activate || true
+gcloud config configurations activate clean
+
+gcloud auth list
+gcloud config list
+```
+---
+
+### Step 2: Set impersonation environment variables
+
+#### Example: Curefit Environment
+```bash
+export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=terraform-admin@terraform-bootstrap-prj-cf.iam.gserviceaccount.com
+export NEW_PROJECT_ID=terraform-bootstrap-prj-cf
+export GOOGLE_CLOUD_QUOTA_PROJECT=$NEW_PROJECT_ID
+export CALLER=econzsupport@curefit.co
+export SA_EMAIL=$GOOGLE_IMPERSONATE_SERVICE_ACCOUNT
+```
+
+---
+
+### Step 3: Authenticate your user account and configure impersonation
+
+```bash
+gcloud auth login --account=$CALLER
+gcloud auth application-default login --account=$CALLER
+gcloud config set project $NEW_PROJECT_ID
+gcloud config set auth/impersonate_service_account "$GOOGLE_IMPERSONATE_SERVICE_ACCOUNT"
+```
+
+---
+
+### Step 4: Verify impersonation works
+
+```bash
+gcloud auth print-access-token --impersonate-service-account="$GOOGLE_IMPERSONATE_SERVICE_ACCOUNT" >/dev/null   && echo "✅ Impersonation OK" || echo "❌ Impersonation FAIL"
+TF_LOG=DEBUG terraform init -reconfigure
+```
+
+---
+
+###  Summary
+
+| Step | Purpose |
+|------|----------|
+| **1. Clean Environment** | Removes residual gcloud state and cached credentials. |
+| **2. Export Variables** | Sets your project, caller, and impersonated service account context. |
+| **3. Login & Configure** | Authenticates your user and enables impersonation for Terraform. |
+| **4. Verify** | Confirms impersonation setup before Terraform runs. |
+
