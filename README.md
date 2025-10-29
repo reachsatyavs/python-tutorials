@@ -237,7 +237,7 @@ It ensures the foundational GCP resources and permissions exist so Terraform can
 ### 🪄 Example Usage
 
 ```bash
-./bootstrap_env.sh \
+.scripts/bootstrap_env.sh \
   --bootstrap-project prj-infra-bootstrap \
   --billing 000000-000000-000000 \
   --org 123456789012 \
