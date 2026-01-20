@@ -23,7 +23,7 @@ This guide is optimized for teaching: **one Python per project via virtual envir
 
 ## 3) Best practices when you have multiple Python versions
 
-### Golden rules (teach these early)
+### Golden rules
 1. **Never install packages globally** for projects.
 2. **Create a virtual environment per project** (`.venv/` inside the project folder).
 3. Always run tools via the active environment:
