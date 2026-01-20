@@ -154,7 +154,7 @@ python -m jupyter lab
 
 ---
 
-## 4) How to use JupyterLab (quick teaching workflow)
+## 4) How to use JupyterLab (quick  workflow)
 
 ### Key ideas
 - A **Notebook** (`.ipynb`) is split into **cells**
