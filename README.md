@@ -4,7 +4,7 @@ This guide is optimized for teaching: **one Python per project via virtual envir
 
 ---
 
-## 1) Which Python should students install?
+## 1) Which Python should I install?
 
 ### Recommendation (for new learners)
 - Install the **latest stable CPython 3.x** from the official Python website.
@@ -56,7 +56,7 @@ my-project/
 ## A) Install Python (Windows)
 1. Download from Python.org: https://www.python.org/downloads/windows/
 2. During installation:
-   - ✅ Select **“Add Python to PATH”** (recommended for students)
+   - ✅ Select **“Add Python to PATH”**
    - ✅ Ensure `pip` is installed (default)
    - ✅ Python Launcher (`py`) is typically included with the standard installer.
 
@@ -107,7 +107,7 @@ python -m jupyter lab
 # macOS (Step-by-step)
 
 ## A) Install Python (macOS)
-### Option 1 (recommended for most students): python.org installer
+### Option 1: python.org installer
 - Download from: https://www.python.org/downloads/
 
 ### Option 2: Homebrew (common for developers)
@@ -156,7 +156,7 @@ python -m jupyter lab
 
 ## 4) How to use JupyterLab (quick teaching workflow)
 
-### Key ideas for students
+### Key ideas
 - A **Notebook** (`.ipynb`) is split into **cells**
   - Markdown cell: notes / explanation
   - Code cell: Python code
@@ -183,7 +183,7 @@ python -m jupyter lab
 This forces Jupyter to run from the current environment.
 
 ### Need a Jupyter kernel linked to the venv (optional)
-If students don’t see the correct kernel, do:
+If you don’t see the correct kernel, do:
 ```bash
 python -m pip install ipykernel
 python -m ipykernel install --user --name python-course --display-name "Python (python-course)"
@@ -191,7 +191,7 @@ python -m ipykernel install --user --name python-course --display-name "Python (
 
 ---
 
-## Quick checklist (what you want every student to know)
+## Quick checklist (what you want everyone to know)
 - Create `.venv` inside each project
 - Activate it before installing packages
 - Install JupyterLab inside `.venv`
