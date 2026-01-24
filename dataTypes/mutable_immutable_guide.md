@@ -29,7 +29,7 @@ x = 10
 ---
 
 ### Immutable Objects
-- Cannot change after creation
+- Cannot change the value of the object after creation
 - Examples: int, str, tuple
 
 ### Mutable Objects
