@@ -1,7 +1,7 @@
 
 # Python Mutable vs Immutable Objects – Complete Guide
 
-This README provides a **complete, unified explanation** of:
+This document provides a **complete, unified explanation** of:
 - Why Python has mutable and immutable objects
 - How Python’s memory model works
 - Python vs Java comparison
