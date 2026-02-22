@@ -1,7 +1,6 @@
 # Python Functions – Overview & Examples
 
-A guide to **what functions are**, **types of functions**, **argument types** (including `*` and `**`), and **10 sample functions** you can walk through with students.
-
+A guide to **what functions are**, **types of functions**, **argument types** (including `*` and `**`), and **10 sample functions** 
 ---
 
 ## 1. What is a Function?
@@ -168,7 +167,7 @@ def example(pos1, pos2, /, pos_or_kw, *, kw_only):
 
 ---
 
-## 4. Ten Sample Functions for Teaching
+## 4. Ten Sample Functions for Reference
 
 ### Example 1: Basic function with return
 
