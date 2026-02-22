@@ -148,7 +148,33 @@ def greet(name, age):
 greet(**config)  # "Alice is 25 years old"
 ```
 
-### 3.8 Argument Order (Summary)
+
+### 3.8 Mixed arguments Example 
+
+```python
+def demo(x, y, /, z, *, debug=False):
+    print(x, y, z, debug)
+
+```
+Allowed calls:
+```python
+demo(1, 2, 3)
+demo(1, 2, z=3)
+demo(1, 2, 3, debug=True)
+demo(1, 2, z=3, debug=True)
+```
+
+NOT allowed:
+```python
+demo(x=1, y=2, z=3)      # ❌ x, y positional-only
+demo(1, y=2, z=3)        # ❌ y positional-only
+demo(1, 2, 3, True)      # ❌ debug is keyword-only
+
+```
+
+
+
+### 3.9 Argument Order (Summary)
 
 Recommended order for parameters:
 
