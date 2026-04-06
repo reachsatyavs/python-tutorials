@@ -1,5 +1,24 @@
-# dict-example.py
+# dist-examples.py  (dictionary examples)
 # Demonstrating Python DICTIONARY (dict) data type
+#
+# -----------------------------------------------------------------------------
+# Dict instance methods
+# -----------------------------------------------------------------------------
+#   clear          — remove all keys
+#   copy           — shallow copy
+#   fromkeys       — new dict with keys from iterable, single default value
+#   get            — value for key, or default if missing
+#   items          — view of (key, value) pairs
+#   keys           — view of keys
+#   pop            — remove key and return its value
+#   popitem        — remove and return (key, value); last inserted (3.7+ order)
+#   setdefault     — get value or set key to default and return it
+#   update         — merge in keys/values from mapping or kwargs
+#   values         — view of values
+#
+# Python 3.9+ merge: |  (new dict), |=  (update in place)
+# Constructor: dict(), dict(**kwargs), dict(iterable_pairs)
+# -----------------------------------------------------------------------------
 
 # Creating a dictionary
 user = {
@@ -12,6 +31,11 @@ print(user)
 # Accessing values
 print(user["name"])
 print(user.get("city"))
+
+# keys(), values(), items() views
+print("keys:", list(user.keys()))
+print("values:", list(user.values()))
+print("items:", list(user.items()))
 
 # Adding / updating values
 user["role"] = "Engineer"
@@ -50,6 +74,16 @@ coordinates = {
     (1, 1): "Point C"
 }
 print(coordinates[(1, 1)])
+
+# copy() and clear()
+user_copy = user.copy()
+scratch = {"tmp": 1}
+scratch.clear()
+print("after clear:", scratch, "copy still has keys:", list(user_copy.keys()))
+
+# fromkeys (default value for each key)
+rank = dict.fromkeys(["gold", "silver", "bronze"], 0)
+print(rank)
 
 # ------------------------------
 # 10 MORE DICT EXAMPLES

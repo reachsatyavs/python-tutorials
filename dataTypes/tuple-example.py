@@ -1,3 +1,20 @@
+# tuple-example.py
+# Demonstrating Python TUPLE data type
+#
+# -----------------------------------------------------------------------------
+# Tuple instance methods (tuples are immutable — only these two)
+# -----------------------------------------------------------------------------
+#   count  — number of occurrences of a value
+#   index  — index of first occurrence (optional start/stop)
+#
+# Built-ins / constructors commonly used with tuples
+# -----------------------------------------------------------------------------
+#   tuple  — build tuple from iterable
+#   len    — length
+#   min, max, sum  — when elements support it
+#   sorted, reversed, enumerate, zip  — often paired with tuples
+# -----------------------------------------------------------------------------
+
 # Creating a tuple with different data types
 basic_tuple = (1, "hello", 3.14, True)
 print(basic_tuple)  # Output: (1, 'hello', 3.14, True)
@@ -8,6 +25,10 @@ my_tuple = (10, 20, 30, 40, 50)
 print(my_tuple[0])  # Output: 10
 print(my_tuple[2])  # Output: 30
 print(my_tuple[-1]) # Output: 50
+
+# Built-ins: len, min, max, sum (numeric tuple)
+nums_only = (10, 20, 30, 40, 50)
+print("len/min/max/sum:", len(nums_only), min(nums_only), max(nums_only), sum(nums_only))
 
 
 # Slicing a tuple
@@ -63,7 +84,7 @@ print(coordinates[(0, 0)])  # Output: Origin
 print(coordinates[(1, 1)])  # Output: Point C
 
 
-# Using tuple methods
+# Using tuple methods: count(), index()
 my_tuple = (1, 2, 3, 2, 4, 2)
 print(my_tuple.count(2))  # Output: 3 (number of times 2 appears in the tuple)
 print(my_tuple.index(3))  # Output: 2 (index of the first occurrence of 3)
@@ -194,12 +215,15 @@ scores = (90, 80, 85)
 for pair in zip(names, scores):
     print(pair)
 
-# 24) Convert list to tuple
+# 24) Convert list to tuple (tuple() built-in)
 numbers = [1, 2, 3, 4]
 safe_numbers = tuple(numbers)
 print(safe_numbers)
 
-# 25) Tuple as constant configuration
+# 25) sorted / reversed with tuple input
+print("sorted tuple:", tuple(sorted((3, 1, 2))))
+print("reversed tuple:", tuple(reversed((1, 2, 3))))
+
+# 26) Tuple as constant configuration
 DB_CONFIG = ("localhost", 5432, "appdb")
 print(DB_CONFIG)
-

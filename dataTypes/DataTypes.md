@@ -109,22 +109,24 @@ Used to store **unordered, unique elements**.
 
 In Python, data types define the nature and behavior of data.
 
-| Type         | Description                                | Example                             | Common Usage                                  |
-|--------------|--------------------------------------------|-------------------------------------|----------------------------------------------|
-| `int`        | Integer numbers                            | `x = 42`                            | Counting, indexing, math operations          |
-| `float`      | Floating-point numbers                     | `y = 3.14`                          | Scientific calculations                     |
-| `complex`    | Complex numbers                            | `z = 1 + 2j`                        | Engineering, signal processing               |
-| `str`        | Text strings                               | `s = "hello"`                       | Text processing, input/output                |
-| `list`       | Ordered, mutable sequence                  | `lst = [1, 2, 3]`                   | Dynamic collections                          |
-| `tuple`      | Ordered, immutable sequence                | `tpl = (1, 2, 3)`                   | Fixed collections, dictionary keys           |
-| `dict`       | Key-value mapping                          | `dct = {"a": 1, "b": 2}`            | Fast lookup, structured data                 |
-| `set`        | Unordered unique elements                  | `st = {1, 2, 3}`                    | Removing duplicates, membership tests        |
-| `frozenset`  | Immutable set                              | `fst = frozenset([1, 2, 3])`        | Dictionary keys, constants                   |
-| `bool`       | Boolean values                             | `flag = True`                       | Conditional logic                            |
-| `bytes`      | Immutable byte sequence                    | `b = b"hello"`                      | Binary data, networking                      |
-| `bytearray`  | Mutable byte sequence                      | `ba = bytearray(b"hello")`          | Mutable binary data                          |
-| `memoryview` | View of memory without copying             | `mv = memoryview(b"hello")`         | Efficient data access                        |
-| `NoneType`   | Represents absence of value                | `x = None`                          | Defaults, optional values                    |
+**About the Size column:** Values are **approximate** for **CPython on 64-bit** (measured with `sys.getsizeof()`). They change between Python versions. For **containers** (`list`, `dict`, `set`, etc.), the figure is mainly the **container object**; memory for **elements** (other objects they reference) is separate. `int` has **no fixed max size**—it grows as needed (arbitrary precision).
+
+| Type         | Description                                | Example                             | Size (approx., CPython 64-bit) | Common Usage                                  |
+|--------------|--------------------------------------------|-------------------------------------|--------------------------------|----------------------------------------------|
+| `int`        | Integer numbers                            | `x = 42`                            | Not fixed; small ints often ~28 B; grows with magnitude | Counting, indexing, math operations          |
+| `float`      | Floating-point numbers                     | `y = 3.14`                          | ~24 B (object + 8-byte IEEE 754 double) | Scientific calculations                     |
+| `complex`    | Complex numbers                            | `z = 1 + 2j`                        | ~32 B (object + two floats) | Engineering, signal processing               |
+| `str`        | Text strings                               | `s = "hello"`                       | Depends on length; empty str often ~40–50 B + storage for text | Text processing, input/output                |
+| `list`       | Ordered, mutable sequence                  | `lst = [1, 2, 3]`                   | Empty list often ~56 B; grows with allocated slots + separate element objects | Dynamic collections                          |
+| `tuple`      | Ordered, immutable sequence                | `tpl = (1, 2, 3)`                   | Empty tuple often ~40–50 B; grows with item slots + referenced items | Fixed collections, dictionary keys           |
+| `dict`       | Key-value mapping                          | `dct = {"a": 1, "b": 2}`            | Empty dict often ~64 B; grows with number of keys/values | Fast lookup, structured data                 |
+| `set`        | Unordered unique elements                  | `st = {1, 2, 3}`                    | Empty/small sets often ~200+ B; grows with elements | Removing duplicates, membership tests        |
+| `frozenset`  | Immutable set                              | `fst = frozenset([1, 2, 3])`        | Similar idea to `set`; depends on element count | Dictionary keys, constants                   |
+| `bool`       | Boolean values                             | `flag = True`                       | ~28 B; `True` / `False` are single shared objects | Conditional logic                            |
+| `bytes`      | Immutable byte sequence                    | `b = b"hello"`                      | Header often ~33 B + about 1 B per byte in the sequence | Binary data, networking                      |
+| `bytearray`  | Mutable byte sequence                      | `ba = bytearray(b"hello")`          | Mutable buffer + header; grows if you resize | Mutable binary data                          |
+| `memoryview` | View of memory without copying             | `mv = memoryview(b"hello")`         | Small view object (~100–200 B typical); **does not copy** the underlying buffer | Efficient data access                        |
+| `NoneType`   | Represents absence of value                | `x = None`                          | ~16 B; `None` is a single singleton | Defaults, optional values                    |
 
 ---
 
