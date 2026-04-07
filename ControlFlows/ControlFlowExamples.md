@@ -1,20 +1,17 @@
+# Control flow — copy-paste examples
 
-Focus: **`if/elif/else`, `while`, `for`**  
-Tip: Run these in order—examples gradually add concepts.
+These snippets are **standalone**: copy **one** example into a new file or a single notebook cell and run it. You do **not** need to know functions yet—each block is a tiny program by itself.
 
----
+**Sections:** [A. `if`](#a-if--elif--else) · [B. `while`](#b-while) · [C. `for`](#c-for) · [D. Guard clauses](#d-guard-clauses-flat-vs-nested) · [E. Pitfalls](#e-quick-reference-common-pitfalls)
 
-## Contents
-- [A. `if / elif / else` (10 examples)](#a-if--elif--else-10-examples)
-- [B. `while` (10 examples)](#b-while-10-examples)
-- [C. `for` (10 examples)](#c-for-10-examples)
-- [Quick Reference: Common Pitfalls](#quick-reference-common-pitfalls)
+**Note:** Examples that use `input()` wait for you to type in the terminal or notebook—run those on their own.
 
 ---
 
-## A. `if / elif / else` (10 examples)
+## A. `if` / `elif` / `else`
 
 ### 1) Basic boolean check
+
 ```python
 is_prod = True
 
@@ -25,6 +22,7 @@ else:
 ```
 
 ### 2) Numeric comparison
+
 ```python
 cpu_usage = 82
 
@@ -35,6 +33,7 @@ else:
 ```
 
 ### 3) Multiple branches with `elif`
+
 ```python
 status_code = 404
 
@@ -47,6 +46,7 @@ else:
 ```
 
 ### 4) String membership (`in`)
+
 ```python
 log_line = "ERROR: disk full"
 
@@ -57,6 +57,7 @@ else:
 ```
 
 ### 5) Compound conditions (`and` / `or`)
+
 ```python
 env = "prod"
 region = "asia-south1"
@@ -67,7 +68,8 @@ else:
     print("Other environment/region")
 ```
 
-### 6) Nested `if` (then refactor later)
+### 6) Nested `if` (harder to read—refactor when you can)
+
 ```python
 user_role = "admin"
 mfa_enabled = False
@@ -81,18 +83,19 @@ else:
     print("Standard access")
 ```
 
-### 7) Guard clause pattern (preferred in production)
+### 7) Guard style: check before you act (no function—just variables)
+
 ```python
-def deploy(service_name: str):
-    if not service_name:
-        raise ValueError("service_name is required")
+service_name = "auth"
 
-    print(f"Deploying {service_name}...")
-
-deploy("auth")
+if not service_name:
+    print("Error: service_name is required")
+else:
+    print("Deploying " + service_name + "...")
 ```
 
-### 8) Validate config values
+### 8) Validate a value
+
 ```python
 timeout_seconds = 0
 
@@ -102,7 +105,8 @@ else:
     print("Timeout OK:", timeout_seconds)
 ```
 
-### 9) Mapping-like logic using dict (reduces `elif` chains)
+### 9) Dict lookup instead of a long `elif` chain
+
 ```python
 handlers = {
     "start": "Starting service...",
@@ -118,18 +122,60 @@ else:
     print("Unknown action")
 ```
 
-### 10) Ternary (inline if) for simple assignments
+### 10) Ternary (inline `if` for simple assignments)
+
 ```python
 pta_mode = "PTA2"
 label = "PTA2" if pta_mode == "PTA2" else "PTA1"
 print(label)
 ```
 
+### 11) `pass` — empty block placeholder
+
+```python
+# You need a block under if, but you are not ready to write it yet:
+x = 1
+if x > 0:
+    pass  # add real code later
+print("done")
+```
+
+### 12) Truthiness vs `None` (explicit check when it matters)
+
+```python
+value = ""
+
+if value is None:
+    print("Explicit None branch")
+elif not value:
+    print("Empty string: falsy, but not None")
+
+value2 = None
+print("value2 is None?", value2 is None)
+```
+
+### 13) `match` / `case` (Python 3.10+ only)
+
+```python
+code = 404
+
+match code:
+    case 200:
+        msg = "OK"
+    case 404:
+        msg = "Not Found"
+    case _:
+        msg = "Other"
+
+print(msg)
+```
+
 ---
 
-## B. `while` (10 examples)
+## B. `while`
 
 ### 1) Count from 1 to 5
+
 ```python
 i = 1
 while i <= 5:
@@ -137,7 +183,8 @@ while i <= 5:
     i += 1
 ```
 
-### 2) Sum numbers until user enters 0
+### 2) Sum numbers until you enter 0 (uses `input()`)
+
 ```python
 total = 0
 
@@ -150,7 +197,8 @@ while True:
 print("Total:", total)
 ```
 
-### 3) Simple password retry (max attempts)
+### 3) Password retry with `while` / `else` (`else` runs only if no `break`)
+
 ```python
 correct = "python123"
 attempts = 0
@@ -163,11 +211,11 @@ while attempts < max_attempts:
         break
     attempts += 1
 else:
-    # runs only if loop ended without break
     print("Account locked")
 ```
 
-### 4) Process queue until empty
+### 4) Process a list like a queue until empty
+
 ```python
 queue = ["job1", "job2", "job3"]
 
@@ -176,7 +224,8 @@ while queue:
     print("Processing:", job)
 ```
 
-### 5) Retry pattern with backoff (simulation)
+### 5) Retry with pause (`import time`)
+
 ```python
 import time
 
@@ -184,20 +233,21 @@ max_retries = 4
 attempt = 1
 
 while attempt <= max_retries:
-    print(f"Attempt {attempt}...")
-    success = (attempt == 3)  # simulate success on 3rd attempt
+    print("Attempt", attempt, "...")
+    success = attempt == 3
 
     if success:
         print("Success!")
         break
 
-    sleep_seconds = 2 ** (attempt - 1)  # 1, 2, 4, 8
-    print(f"Failed. Sleeping {sleep_seconds}s")
-    time.sleep(0.1)  # keep demo fast; replace with sleep_seconds in real code
+    sleep_seconds = 2 ** (attempt - 1)
+    print("Failed. Sleeping", sleep_seconds, "s")
+    time.sleep(0.1)
     attempt += 1
 ```
 
-### 6) Polling until state changes (simulation)
+### 6) Polling until state changes (simulated)
+
 ```python
 state = "PENDING"
 checks = 0
@@ -211,7 +261,8 @@ while state != "DONE" and checks < 5:
 print("Final:", state)
 ```
 
-### 7) Read lines until "exit"
+### 7) Read lines until `"exit"` (uses `input()`)
+
 ```python
 while True:
     line = input("Type something (exit to stop): ")
@@ -220,7 +271,8 @@ while True:
     print("You typed:", line)
 ```
 
-### 8) Validate input until correct type
+### 8) Keep asking until the input is digits (uses `input()`)
+
 ```python
 while True:
     raw = input("Enter an integer: ")
@@ -232,10 +284,12 @@ while True:
 print("Got:", value)
 ```
 
-### 9) Two-pointer technique (algorithmic use case)
+### 9) Two pointers on a sorted list (find pair with a target sum)
+
 ```python
 nums = [1, 2, 3, 4, 5, 6]
-left, right = 0, len(nums) - 1
+left = 0
+right = len(nums) - 1
 target_sum = 9
 
 while left < right:
@@ -243,13 +297,14 @@ while left < right:
     if s == target_sum:
         print("Pair found:", nums[left], nums[right])
         break
-    elif s < target_sum:
+    if s < target_sum:
         left += 1
     else:
         right -= 1
 ```
 
-### 10) Stateful loop with multiple exits (realistic workflow)
+### 10) Simple menu loop (uses `input()`)
+
 ```python
 running = True
 health = 100
@@ -276,11 +331,27 @@ while running:
         print("Unknown cmd")
 ```
 
+### 11) `while` / `else`: only if the loop did **not** `break`
+
+```python
+attempts = 0
+success_flag = False
+
+while attempts < 3:
+    if success_flag:
+        print("Succeeded inside loop")
+        break
+    attempts += 1
+else:
+    print("while-else: finished without break (e.g. retries used up)")
+```
+
 ---
 
-## C. `for` (10 examples)
+## C. `for`
 
 ### 1) Iterate over a list
+
 ```python
 apps = ["auth", "billing", "search"]
 
@@ -288,25 +359,29 @@ for app in apps:
     print("Deploy:", app)
 ```
 
-### 2) `range(n)` basic
+### 2) `range(n)`
+
 ```python
 for i in range(5):
     print(i)
 ```
 
 ### 3) `range(start, stop)`
+
 ```python
 for port in range(8000, 8003):
     print("Checking port:", port)
 ```
 
 ### 4) `range(start, stop, step)`
+
 ```python
 for i in range(10, 0, -2):
     print(i)
 ```
 
-### 5) Loop through string characters
+### 5) Loop through characters in a string
+
 ```python
 name = "satya"
 
@@ -314,7 +389,8 @@ for ch in name:
     print(ch)
 ```
 
-### 6) `enumerate()` for index + value
+### 6) `enumerate()` — index and value
+
 ```python
 services = ["api", "worker", "cron"]
 
@@ -322,7 +398,8 @@ for idx, svc in enumerate(services, start=1):
     print(idx, svc)
 ```
 
-### 7) Loop through dict keys/values/items
+### 7) Loop through a dictionary
+
 ```python
 config = {"env": "prod", "region": "asia-south1", "retries": 3}
 
@@ -330,7 +407,8 @@ for key, value in config.items():
     print(key, "=", value)
 ```
 
-### 8) Filter + build a new list (list comprehension alternative shown)
+### 8) Filter into a new list
+
 ```python
 nums = [10, 15, 22, 33, 40]
 evens = []
@@ -340,23 +418,22 @@ for n in nums:
         evens.append(n)
 
 print("Evens:", evens)
-
-# same as:
-# evens = [n for n in nums if n % 2 == 0]
 ```
 
-### 9) Nested loops (matrix / grid)
+### 9) Nested loops (grid)
+
 ```python
 rows = 3
 cols = 4
 
 for r in range(rows):
     for c in range(cols):
-        print(f"({r},{c})", end=" ")
+        print("(" + str(r) + "," + str(c) + ")", end=" ")
     print()
 ```
 
-### 10) Realistic processing pipeline (parse → validate → act)
+### 10) Parse lines and branch on a token
+
 ```python
 logs = [
     "INFO user=alice action=login",
@@ -373,11 +450,119 @@ for line in logs:
         print("OK:", line)
 ```
 
+### 11) `zip()` — two lists in parallel
+
+```python
+names = ("A", "B", "C")
+scores = (90, 80, 85)
+
+for name, score in zip(names, scores):
+    print(name, score)
+```
+
+### 12) `for` / `else`: run `else` if **no** `break` happened
+
+```python
+items = [{"id": 1}, {"id": 2}, {"id": 3}]
+target_id = 99
+
+for item in items:
+    if item["id"] == target_id:
+        print("Found")
+        break
+else:
+    print("for-else: not found (loop finished without break)")
+```
+
+### 13) `break` vs `continue`
+
+```python
+for n in range(10):
+    if n == 5:
+        break
+    print("break demo:", n)
+
+for n in range(5):
+    if n == 2:
+        continue
+    print("continue demo:", n)
+```
+
 ---
 
-## Quick Reference: Common Pitfalls
+## D. Guard clauses (flat vs nested)
+
+Use **early checks** so the main logic stays at the left margin. Here `user` is either `None` or a **dictionary** (no classes needed).
+
+### Nested style (harder to follow)
+
+```python
+user = {"is_active": True, "has_permission": False}
+
+if user is not None:
+    if user["is_active"]:
+        if user["has_permission"]:
+            result = "Allowed"
+        else:
+            result = "No Permission"
+    else:
+        result = "Inactive"
+else:
+    result = "No User"
+
+print(result)
+```
+
+### Guard style (same logic, flatter)
+
+```python
+user = {"is_active": True, "has_permission": True}
+
+if user is None:
+    result = "No User"
+elif not user["is_active"]:
+    result = "Inactive"
+elif not user["has_permission"]:
+    result = "No Permission"
+else:
+    result = "Allowed"
+
+print(result)
+```
+
+### `continue` to skip bad items (list of dicts)
+
+```python
+files = [
+    {"name": "a.txt", "valid": True},
+    {"name": "bad.log", "valid": False},
+    {"name": "b.txt", "valid": True},
+]
+
+for file in files:
+    if not file["valid"]:
+        continue
+    print("processing", file["name"])
+```
+
+### Fail fast with `raise` (optional)
+
+```python
+a = 10
+b = 0
+
+if b == 0:
+    raise ValueError("Denominator cannot be zero")
+
+print(a / b)
+```
+
+---
+
+## E. Quick reference: common pitfalls
 
 ### 1) Indentation matters
+
 ```python
 # Wrong:
 # if True:
@@ -389,19 +574,26 @@ if True:
 ```
 
 ### 2) `=` vs `==`
-- `=` assignment
-- `==` comparison
 
-### 3) Infinite loops
+- `=` assigns a value.
+- `==` compares two values.
+
+### 3) Infinite `while`
+
+Make sure something changes, or use `break`:
+
 ```python
-# Always ensure the loop condition changes or use break.
 i = 1
 while i <= 3:
     print(i)
     i += 1
 ```
 
-### 4) `for` is for iterables; `while` is for conditions
-- Use `for` when iterating over known data.
-- Use `while` when the stop condition depends on runtime state.
+### 4) `for` vs `while`
 
+- Use `for` when you are stepping through a known iterable.
+- Use `while` when stopping depends on state that changes as you go (retries, menus, `input()`).
+
+---
+
+For concepts and diagrams, see **`ControlFlow.md`**.
