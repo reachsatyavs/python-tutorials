@@ -208,7 +208,7 @@ You index people by:
 
 ---
 
-## One-Line Explanation for Students
+## One-Line Explanation
 
 > **Hashing is a shortcut that converts a key into a number so Python can find values instantly instead of searching.**
 
@@ -226,18 +226,4 @@ Rules:
 - That’s why lists and sets cannot be keys
 ```
 
----
 
-## Can I Run These Examples?
-
-✅ YES — every example is runnable
-
----
-
-## Takeaway
-
-- Hashing makes dictionaries and sets fast
-- Immutable keys guarantee correctness
-- This design prevents subtle bugs
-
-Understanding hashing means understanding **why Python dictionaries are powerful**.
