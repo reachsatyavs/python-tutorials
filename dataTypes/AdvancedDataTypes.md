@@ -265,12 +265,17 @@ If you truly need concurrent access patterns:
 
 | Type  | Literal example | Ordered? | Indexed? | Mutable? | Allows duplicates? | Unique enforced? | Key/Value? | Hashable itself? | Typical lookup speed | “Thread-safe” to share?* |
 |------|------------------|----------|----------|----------|--------------------|------------------|------------|------------------|----------------------|---------------------------|
-| `tuple` | `(1, 2, 3)` | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes | ❌ No | ❌ No | ✅ Often (if elements hashable) | Index O(1) | ✅ Best (immutable) |
-| `list`  | `[1, 2, 3]` | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ❌ No | Index O(1) | ⚠️ Needs locks if shared writes |
-| `dict`  | `{"a": 1}` | ✅ Insertion order | ⚠️ By key | ✅ Yes | Values ✅ / Keys ❌ | Keys ✅ | ✅ Yes | ❌ No | Key O(1) avg | ⚠️ Needs locks if shared writes |
-| `set`   | `{1, 2, 3}` | ❌ No | ❌ No | ✅ Yes | ❌ No | ✅ Yes | ❌ No | ❌ No | Membership O(1) avg | ⚠️ Needs locks if shared writes |
+| `tuple` | `(1, 2, 3)` | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes | ❌ No | ❌ No | ✅ Often (if elements hashable) | Index `t[i]` → O(1) † | ✅ Best (immutable) |
+| `list`  | `[1, 2, 3]` | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ❌ No | Index `l[i]` → O(1) † | ⚠️ Needs locks if shared writes |
+| `dict`  | `{"a": 1}` | ✅ Insertion order | ⚠️ By key | ✅ Yes | Values ✅ / Keys ❌ | Keys ✅ | ✅ Yes | ❌ No | Key `d[k]` → O(1) avg | ⚠️ Needs locks if shared writes |
+| `set`   | `{1, 2, 3}` | ❌ No | ❌ No | ✅ Yes | ❌ No | ✅ Yes | ❌ No | ❌ No | Membership `x in s` → O(1) avg | ⚠️ Needs locks if shared writes |
 
-\* “Thread-safe to share” here means: safe to share without worrying about someone mutating it out from under you. For correctness in multi-threaded programs, **use locks** for shared mutable structures.
+\* "Thread-safe to share" here means: safe to share without worrying about someone mutating it out from under you. For correctness in multi-threaded programs, **use locks** for shared mutable structures.
+
+† **Important distinction for `tuple` and `list`:**  
+`O(1)` applies to **positional** access by index (`t[2]`, `l[5]`) — Python jumps directly to that slot.  
+Searching by **value** (`x in my_list`, `x in my_tuple`) is **O(n)** — Python must scan every element.  
+If you need fast membership checks, use a `set` or `dict` key instead.
 
 ---
 
