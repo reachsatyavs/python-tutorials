@@ -1,4 +1,32 @@
-# 👋 Why Python 🐍
+# Python Tutorials — Course Index
+
+A structured collection of notes, examples, and interactive scripts for teaching Python from the ground up.
+
+---
+
+## Course Structure
+
+| Directory | What it covers |
+|-----------|---------------|
+| [`dataTypes/`](dataTypes/README.md) | Built-in types, mutable vs immutable, `list`, `dict`, `set`, `tuple`, `str` — with example scripts for each |
+| [`ControlFlows/`](ControlFlows/README.md) | `if`/`elif`/`else`, `while`, `for`, `break`, `continue`, guard clauses — concepts + 40+ copy-paste examples |
+| [`Functions/`](Functions/README.md) | `def`, return values, all argument types (`*args`, `**kwargs`, `/`, `*`), lambda, list comprehensions |
+| [`Hashing/`](Hashing/README.md) | How Python hashing works, dict internals, thread safety, interactive visualiser scripts |
+
+---
+
+## Root files
+
+| File | What it is |
+|------|------------|
+| `README.md` | This file — course index and setup guide |
+| `AI_ML_Ecosystem.md` | Overview of the Python AI/ML ecosystem |
+| `LLM.md` | Notes on Large Language Models in the Python context |
+| `PythonInstallation.pptx` | Setup slides for class |
+
+---
+
+## Why Python
 
 - 🧠 **Easy to learn, easy to read** – clean syntax with minimal boilerplate  
 - 🔧 **Extremely versatile** – web, automation, data, AI/ML, cloud & DevOps  

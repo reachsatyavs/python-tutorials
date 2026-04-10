@@ -11,6 +11,7 @@ How to define and call functions in Python — from basic `def` to lambda, argum
 | `Functions.md` | Notes | What a function is, types of functions, all argument types (`*`, `**`, `/`, defaults), 10 sample functions |
 | `Lambda.md` | Notes | Lambda syntax, characteristics, use with `map`/`filter`/`sorted`, limitations, when to use |
 | `Lambda_vs_ListComprehension.md` | Notes | Side-by-side comparison — when to pick lambda vs list comprehension |
+| `functions_examples.py` | Script | 14 runnable real-world examples: `*args`, `**kwargs`, keyword-only, recursion, higher-order functions, invoice calculator |
 
 ---
 

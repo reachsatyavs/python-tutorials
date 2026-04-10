@@ -10,6 +10,7 @@ How Python makes decisions and repeats actions — `if`, `while`, `for`, `break`
 |------|------|----------------|
 | `ControlFlow.md` | Notes | Concepts, syntax, guard clauses, `for`/`while` + `else`, `match`/`case` (3.10+), when to use what |
 | `ControlFlowExamples.md` | Examples | 40+ standalone copy-paste snippets — one per concept, no functions needed |
+| `controlflow_examples.py` | Script | 13 runnable real-world examples: grade classifier, FizzBuzz, ATM, shopping cart, login retry and more |
 | `Python_ControlFlow.pptx` | Slides | Presentation slides for the control flow topic |
 
 ---
