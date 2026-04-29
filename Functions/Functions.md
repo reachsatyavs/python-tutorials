@@ -1,6 +1,6 @@
 # Python Functions – Overview & Examples
 
-## A guide to **what functions are**, **types of functions**, **argument types** (including `*` and `**`), and **10 sample functions**
+## A guide to **what functions are**, **types of functions**, **argument types** (including `*` and `*`*), and **10 sample functions**
 
 ---
 
@@ -156,7 +156,7 @@ average(1, 2, 3, 4, 5)    # 3.0
 
 ### 3.5 `**kwargs` – Variable Keyword Arguments
 
-**What it is:** A parameter prefixed with `**` that collects any number of named arguments into a **dictionary**.
+**What it is:** A parameter prefixed with `*`* that collects any number of named arguments into a **dictionary**.
 
 **Why it exists:** Some functions need to accept an open-ended set of named inputs — building a user profile, configuring a connection, forwarding settings to another function. Without `**kwargs`, you'd have to predefine every possible field. With it, the function adapts to whatever the caller provides.
 
@@ -192,9 +192,9 @@ connect("localhost", 8080, 30)              # ❌ TypeError — timeout must be 
 
 ### 3.7 `**` When Calling – Dictionary Unpacking
 
-**What it is:** Using `**` at the *call site* (not the definition) to unpack a dictionary into keyword arguments.
+**What it is:** Using `*`* at the *call site* (not the definition) to unpack a dictionary into keyword arguments.
 
-**Why it exists:** You often already have data sitting in a dictionary — from a config file, an API response, or user input. Without `**`, you'd have to manually extract every key and pass it. With `**`, the dictionary maps directly to the function's parameters in one clean step.
+**Why it exists:** You often already have data sitting in a dictionary — from a config file, an API response, or user input. Without `*`*, you'd have to manually extract every key and pass it. With `**`, the dictionary maps directly to the function's parameters in one clean step.
 
 ```python
 config = {"name": "Alice", "age": 25}
@@ -260,15 +260,17 @@ def example(pos1, pos2, /, pos_or_kw, *args, kw_only, **kwargs):
     pass
 ```
 
-| Symbol | Meaning | Why it exists |
-|--------|---------|---------------|
-| `a, b` | Positional | Simple, natural left-to-right matching |
-| `a=1` | Default | Makes parameters optional |
-| `key=value` | Keyword | Order freedom, self-documenting, enables passing functions |
-| `*args` | Extra positional → tuple | Unknown count of inputs |
-| `**kwargs` | Extra keyword → dict | Unknown set of named inputs |
-| `*` | After: keyword-only | Forces critical args to always be named |
-| `/` | Before: positional-only | Keeps parameter names private from callers |
+
+| Symbol      | Meaning                  | Why it exists                                              |
+| ----------- | ------------------------ | ---------------------------------------------------------- |
+| `a, b`      | Positional               | Simple, natural left-to-right matching                     |
+| `a=1`       | Default                  | Makes parameters optional                                  |
+| `key=value` | Keyword                  | Order freedom, self-documenting, enables passing functions |
+| `*args`     | Extra positional → tuple | Unknown count of inputs                                    |
+| `**kwargs`  | Extra keyword → dict     | Unknown set of named inputs                                |
+| `*`         | After: keyword-only      | Forces critical args to always be named                    |
+| `/`         | Before: positional-only  | Keeps parameter names private from callers                 |
+
 
 ---
 
@@ -411,16 +413,18 @@ print(power(2, 10))   # 1024
 
 ## Quick Reference: Why Each Argument Type Exists
 
-| Pattern | Name | Problem it solves |
-|---------|------|-------------------|
-| `a, b` | Positional | Simple ordered inputs — fast and natural |
-| `a="Hello"` | Default | Optional inputs — caller provides only what changes |
-| `key=value` | Keyword | Order freedom — readable, safe, enables passing functions |
-| `*args` | Variable positional | Unknown count of inputs — collected as a tuple |
-| `**kwargs` | Variable keyword | Unknown set of named inputs — collected as a dict |
-| `*` | Keyword-only marker | Forces critical args to always be named — prevents silent bugs |
-| `**` at call site | Dict unpacking | Reuse existing dict data as keyword arguments |
-| `/` | Positional-only marker | Keeps parameter names private — safe API design |
+
+| Pattern           | Name                   | Problem it solves                                              |
+| ----------------- | ---------------------- | -------------------------------------------------------------- |
+| `a, b`            | Positional             | Simple ordered inputs — fast and natural                       |
+| `a="Hello"`       | Default                | Optional inputs — caller provides only what changes            |
+| `key=value`       | Keyword                | Order freedom — readable, safe, enables passing functions      |
+| `*args`           | Variable positional    | Unknown count of inputs — collected as a tuple                 |
+| `**kwargs`        | Variable keyword       | Unknown set of named inputs — collected as a dict              |
+| `*`               | Keyword-only marker    | Forces critical args to always be named — prevents silent bugs |
+| `**` at call site | Dict unpacking         | Reuse existing dict data as keyword arguments                  |
+| `/`               | Positional-only marker | Keeps parameter names private — safe API design                |
+
 
 ---
 
@@ -436,3 +440,4 @@ print(power(2, 10))   # 1024
 8. `*` for keyword-only — forcing clarity
 9. `/` for positional-only — locking the interface
 10. Unpacking with `*` and `**` when calling
+
