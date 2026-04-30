@@ -1,6 +1,6 @@
 # 01 — Python Introduction
 
-Optional slides (repo root): [`PythonInstallation.pptx`](../PythonInstallation.pptx)
+Optional slides: [`PythonInstallation.pptx`](PythonInstallation.pptx)
 
 ---
 

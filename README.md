@@ -27,7 +27,7 @@ Modules use **numbered folders** so order matches your syllabus. The full roadma
 | `COURSE_LAYOUT.md` | Numbered directory plan, algorithm hours, migration notes |
 | `AI_ML_Ecosystem.md` | Overview of the Python AI/ML ecosystem |
 | `LLM.md` | Notes on Large Language Models in the Python context |
-| `PythonInstallation.pptx` | Setup slides for class (see also module 01) |
+| `01-python-intro/PythonInstallation.pptx` | Setup slides for class (module 01) |
 
 ---
 
