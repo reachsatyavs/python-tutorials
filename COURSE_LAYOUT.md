@@ -13,7 +13,7 @@ python-tutorials/
 ├── README.md                 # Course index (setup guide → module 01)
 ├── COURSE_LAYOUT.md          # This file — full roadmap
 │
-├── 01-python-intro/          # ✅ Why Python + install / venv / JupyterLab (full guide)
+├── 01-python-intro/          # ✅ README, PythonInstallation.pptx, install / venv / JupyterLab
 ├── 02-data-types/            # ✅ Was: dataTypes/
 ├── 03-operators/             # ✅ Was: Operators/
 ├── 04-control-flows/         # ✅ Was: ControlFlows/
