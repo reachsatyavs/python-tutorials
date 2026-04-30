@@ -156,9 +156,11 @@ average(1, 2, 3, 4, 5)    # 3.0
 
 ### 3.5 `**kwargs` – Variable Keyword Arguments
 
-**What it is:** A parameter prefixed with `*`* that collects any number of named arguments into a **dictionary**.
+**What it is:** A parameter prefixed with `**` that collects any number of named arguments into a **dictionary** (the name `kwargs` is convention only — `**options` works the same).
 
 **Why it exists:** Some functions need to accept an open-ended set of named inputs — building a user profile, configuring a connection, forwarding settings to another function. Without `**kwargs`, you'd have to predefine every possible field. With it, the function adapts to whatever the caller provides.
+
+Quick recap:
 
 ```python
 def build_profile(**info):
@@ -166,9 +168,134 @@ def build_profile(**info):
 
 build_profile(name="Alice", age=25, city="Mumbai")
 # {'name': 'Alice', 'age': 25, 'city': 'Mumbai'}
+# Inside the function, `info` is a dict — use for k, v in info.items()
+```
 
-# info arrives as a dict inside the function
-# Loop over it with: for k, v in info.items()
+Below, more examples follow a common teaching path: **basics → iterating → with defaults → `*args` + `**kwargs` → passing `**dict` → forwarding**.
+
+#### 1. The basics
+
+`kwargs` is a normal dict of the names you passed and their values:
+
+```python
+def show_tags(**kwargs):
+    return kwargs
+
+show_tags(lang="python", level="beginner")
+# {'lang': 'python', 'level': 'beginner'}
+
+# Empty call is allowed — kwargs is {}
+show_tags()  # {}
+```
+
+You can still have required parameters *before* `**kwargs`; only *extra* keyword names go into the dict:
+
+```python
+def greet(title, **extra):
+    return title, extra
+
+greet("Hello", name="Ada", role="dev")
+# ('Hello', {'name': 'Ada', 'role': 'dev'})
+```
+
+#### 2. Iterating
+
+Use `.items()` (or keys/values) like any dict:
+
+```python
+def print_config(**kwargs):
+    for key, value in kwargs.items():
+        print(f"{key} = {value}")
+
+print_config(env="prod", region="asia", retries=3)
+
+def pick_keys(**kwargs):
+    allowed = {"host", "port"}
+    return {k: kwargs[k] for k in kwargs if k in allowed}
+
+pick_keys(host="localhost", port=5432, secret="x")
+# {'host': 'localhost', 'port': 5432}
+```
+
+#### 3. With defaults
+
+Put parameters with defaults *before* `**kwargs` so callers can override them; anything unknown still lands in `kwargs`:
+
+```python
+def connect(host, port=443, **options):
+    timeout = options.get("timeout", 30)
+    ssl = options.get("ssl", True)
+    return f"{host}:{port} timeout={timeout} ssl={ssl}"
+
+connect("api.example.com", timeout=60)           # port 443, ssl True
+connect("api.example.com", 8080, ssl=False)     # port 8080
+```
+
+Alternatively, merge explicit defaults with `kwargs` inside the body:
+
+```python
+def render(**kwargs):
+    defaults = {"theme": "light", "font": 14}
+    opts = {**defaults, **kwargs}  # caller wins on duplicate keys
+    return opts
+
+render(font=18)  # {'theme': 'light', 'font': 18}
+```
+
+#### 4. `*args` + `**kwargs`
+
+Typical “accept anything” pattern: positional extras in `args`, keyword extras in `kwargs`. Order in the signature is: normal params, `*args`, keyword-only (if any), `**kwargs`.
+
+```python
+def flexible(tag, *args, **kwargs):
+    parts = [tag] + [str(a) for a in args]
+    for k, v in kwargs.items():
+        parts.append(f"{k}={v}")
+    return " | ".join(parts)
+
+flexible("LOG", "start", "ok", user="ada", code=200)
+# LOG | start | ok | user=ada | code=200
+```
+
+#### 5. Passing `**dict`
+
+When **calling** a function, `**` unpacks a mapping into separate keyword arguments (keys must match parameter names, or be absorbed by `**kwargs` in the callee):
+
+```python
+def user_card(name, age, city="unknown"):
+    return f"{name}, {age}, {city}"
+
+data = {"name": "Bob", "age": 30, "city": "Delhi"}
+user_card(**data)
+
+# Build options in a dict, then pass through
+base = {"name": "Ana", "age": 22}
+user_card(**base, city="Mumbai")  # city added/overridden at call time
+```
+
+#### 6. Forwarding
+
+Pass received keyword arguments through to another function without listing every key:
+
+```python
+def inner(x, y, z=0):
+    return x + y + z
+
+def outer(a, **kwargs):
+    return inner(a, **kwargs)
+
+outer(1, y=2, z=3)   # 6
+outer(10, y=5)       # 15 (z defaults inside inner)
+
+# Common pattern: thin public API → real implementation
+def public_api(**kwargs):
+    return _implementation(strict=True, **kwargs)
+
+def _implementation(strict, mode="read", **rest):
+    return {"strict": strict, "mode": mode, "rest": rest}
+
+public_api(mode="write", extra=1)
+# {'strict': True, 'mode': 'write', 'rest': {'extra': 1}}
 ```
 
 ---
