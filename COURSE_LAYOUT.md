@@ -10,10 +10,10 @@ This document is the **map** for reorganising `python-tutorials`. Numbers keep f
 
 ```text
 python-tutorials/
-├── README.md                 # Course index + Python / Jupyter setup (authoritative)
+├── README.md                 # Course index (setup guide → module 01)
 ├── COURSE_LAYOUT.md          # This file — full roadmap
 │
-├── 01-python-intro/          # ✅ Why Python; setup stays in root README
+├── 01-python-intro/          # ✅ Why Python + install / venv / JupyterLab (full guide)
 ├── 02-data-types/            # ✅ Was: dataTypes/
 ├── 03-operators/             # ✅ Was: Operators/
 ├── 04-control-flows/         # ✅ Was: ControlFlows/
