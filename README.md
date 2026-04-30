@@ -6,12 +6,16 @@ A structured collection of notes, examples, and interactive scripts for teaching
 
 ## Course Structure
 
-| Directory | What it covers |
-|-----------|---------------|
-| [`dataTypes/`](dataTypes/README.md) | Built-in types, mutable vs immutable, `list`, `dict`, `set`, `tuple`, `str` — with example scripts for each |
-| [`ControlFlows/`](ControlFlows/README.md) | `if`/`elif`/`else`, `while`, `for`, `break`, `continue`, guard clauses — concepts + 40+ copy-paste examples |
-| [`Functions/`](Functions/README.md) | `def`, return values, all argument types (`*args`, `**kwargs`, `/`, `*`), lambda, list comprehensions |
-| [`Hashing/`](Hashing/README.md) | How Python hashing works, dict internals, thread safety, interactive visualiser scripts |
+Modules use **numbered folders** so order matches your syllabus. The full roadmap (modules 06–13 + algorithm chapters) is in [`COURSE_LAYOUT.md`](COURSE_LAYOUT.md).
+
+| # | Directory | What it covers |
+|---|-----------|----------------|
+| 01 | [`01-python-intro/`](01-python-intro/README.md) | Why Python; setup and JupyterLab in this README |
+| 02 | [`02-data-types/`](02-data-types/README.md) | Built-in types, mutable vs immutable, `list`, `dict`, `set`, `tuple`, `str` — notes + example scripts |
+| 03 | [`03-operators/`](03-operators/README.md) | Arithmetic, comparison, logical, bitwise, identity, walrus, ternary — notes + runnable examples |
+| 04 | [`04-control-flows/`](04-control-flows/README.md) | `if`/`elif`/`else`, `while`, `for`, `break`, `continue`, `match`/`case`, guard clauses |
+| 05 | [`05-functions/`](05-functions/README.md) | `def`, return values, argument patterns (`*args`, `**kwargs`, `/`, `*`), lambda, builtins |
+| — | [`Hashing/`](Hashing/README.md) | Supplementary: how hashing works, dict internals, thread safety, try-it scripts |
 
 ---
 
@@ -20,25 +24,16 @@ A structured collection of notes, examples, and interactive scripts for teaching
 | File | What it is |
 |------|------------|
 | `README.md` | This file — course index and setup guide |
+| `COURSE_LAYOUT.md` | Numbered directory plan, algorithm hours, migration notes |
 | `AI_ML_Ecosystem.md` | Overview of the Python AI/ML ecosystem |
 | `LLM.md` | Notes on Large Language Models in the Python context |
 | `PythonInstallation.pptx` | Setup slides for class |
 
 ---
 
-## Why Python
+**Why Python:** see [`01-python-intro/README.md`](01-python-intro/README.md).
 
-- 🧠 **Easy to learn, easy to read** – clean syntax with minimal boilerplate  
-- 🔧 **Extremely versatile** – web, automation, data, AI/ML, cloud & DevOps  
-- 📦 **Massive ecosystem** – 400k+ libraries (pandas, numpy, tensorflow, torch )  
-- ⚙️ **Automation-first language** – CI/CD, testing, scripting, infrastructure  
-- 📈 **High industry demand** – used by Google, Netflix, Meta, OpenAI, SAP  
-- 🤖 **AI & data powerhouse** – standard for ML, deep learning & GenAI  
-- 💻 **Cross-platform** – runs on Windows, macOS & Linux  
-- 🌍 **Strong community** – great docs, tutorials & support  
-- 🚀 **Fast prototyping** – ideal for MVPs and startups  
-- 🔮 **Future-proof skill** – core to AI, cloud-native & automation workflows  
-
+---
 
 # Python + JupyterLab Setup Guide (Windows & macOS)
 
