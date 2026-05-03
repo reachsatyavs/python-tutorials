@@ -246,15 +246,44 @@ render(font=18)  # {'theme': 'light', 'font': 18}
 
 Typical “accept anything” pattern: positional extras in `args`, keyword extras in `kwargs`. Order in the signature is: normal params, `*args`, keyword-only (if any), `**kwargs`.
 
+Collect extra positionals and keywords without a comprehension — use a simple loop (or `sum`, etc.):
+
 ```python
 def flexible(tag, *args, **kwargs):
-    parts = [tag] + [str(a) for a in args]
+    parts = [tag]
+    for a in args:
+        parts.append(str(a))
     for k, v in kwargs.items():
-        parts.append(f"{k}={v}")
+        parts.append(str(k) + "=" + str(v))
     return " | ".join(parts)
 
 flexible("LOG", "start", "ok", user="ada", code=200)
 # LOG | start | ok | user=ada | code=200
+```
+
+Extra positionals only — first value is required, the rest are bundled into a tuple:
+
+```python
+def total(first, *rest):
+    return first + sum(rest)
+
+total(10)              # 10
+total(10, 20, 30)      # 60
+```
+
+Extra keywords only — pick what you need from the dict:
+
+```python
+def student(name, **scores):
+    out = "Student: " + name
+    if "math" in scores:
+        out += ", math=" + str(scores["math"])
+    if "english" in scores:
+        out += ", english=" + str(scores["english"])
+    return out
+
+student("Lee", math=88, english=92)
+# Student: Lee, math=88, english=92
 ```
 
 #### 5. Passing `**dict`
@@ -271,6 +300,28 @@ user_card(**data)
 # Build options in a dict, then pass through
 base = {"name": "Ana", "age": 22}
 user_card(**base, city="Mumbai")  # city added/overridden at call time
+```
+
+Another simple call: all parameter names come from the dict keys:
+
+```python
+def area(width, height, unit="m"):
+    return str(width) + "x" + str(height) + " " + unit
+
+dims = {"width": 10, "height": 5}
+area(**dims)  # "10x5 m"
+
+dims_ft = {"width": 3, "height": 4, "unit": "ft"}
+area(**dims_ft)  # "3x4 ft"
+```
+
+Unpack only some names into a function that also collects leftover keywords:
+
+```python
+def line(a, b, **rest):
+    return (a, b, rest)
+
+line(**{"a": 1, "b": 2, "note": "ok"})  # (1, 2, {'note': 'ok'})
 ```
 
 #### 6. Forwarding
