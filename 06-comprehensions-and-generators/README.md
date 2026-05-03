@@ -13,6 +13,8 @@
 | [`Comprehensions.md`](Comprehensions.md) | Notes | Full topic write-up — list / set / dict comprehensions, generator expressions, mental model, cheat sheet |
 | [`Python_Comprehensions.pptx`](Python_Comprehensions.pptx) | Slides | Deck aligned with `Comprehensions.md` |
 | [`comprehensions.py`](comprehensions.py) | Script | 32 runnable examples (prints sections as you run it) |
+| [`Generators.md`](Generators.md) | Notes | Generators: `yield`, iterator protocol, use cases, `send`, `yield from` |
+| [`generators.py`](generators.py) | Script | Runnable generator examples |
 
 ---
 
@@ -20,6 +22,7 @@
 
 1. Walk through [`Comprehensions.md`](Comprehensions.md) (or the slides) in section order.
 2. Run `python comprehensions.py` from this folder to see all examples on the terminal.
+3. Read [`Generators.md`](Generators.md), then run `python generators.py` for generator / `yield` examples.
 
 ---
 
