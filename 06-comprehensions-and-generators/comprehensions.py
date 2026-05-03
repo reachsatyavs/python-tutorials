@@ -1,7 +1,7 @@
 """
 ============================================================
   Python Comprehensions — 32 Examples
-  Module 4 · github.com/reachsatyavs/python-tutorials
+  Module 06 · github.com/reachsatyavs/python-tutorials
 ============================================================
   Sections:
     1. List Comprehension      [ ]       — Examples 1–8
