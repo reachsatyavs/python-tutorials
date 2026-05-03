@@ -18,7 +18,6 @@
 ## Learning order
 
 1. Walk through [`Comprehensions.md`](Comprehensions.md) (or the slides) in section order.
-2. Add your own examples script here when ready (e.g. `examples.py`).
 
 ---
 
