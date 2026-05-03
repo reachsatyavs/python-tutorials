@@ -12,16 +12,13 @@
 |------|------|----------------|
 | [`Comprehensions.md`](Comprehensions.md) | Notes | Full topic write-up — list / set / dict comprehensions, generator expressions, mental model, cheat sheet |
 | [`Python_Comprehensions.pptx`](Python_Comprehensions.pptx) | Slides | Deck aligned with `Comprehensions.md` |
-| [`Comprehensions_and_Generators.md`](Comprehensions_and_Generators.md) | Notes | Shorter module overview + `yield` / generator functions (extra to the main doc) |
-| [`comprehensions_generators_examples.py`](comprehensions_generators_examples.py) | Script | Runnable demos |
 
 ---
 
 ## Learning order
 
 1. Walk through [`Comprehensions.md`](Comprehensions.md) (or the slides) in section order.
-2. Read [`Comprehensions_and_Generators.md`](Comprehensions_and_Generators.md) for **`yield`** and generator *functions* if you cover them in the same week.
-3. Run [`comprehensions_generators_examples.py`](comprehensions_generators_examples.py) and change the inputs to experiment.
+2. Add your own examples script here when ready (e.g. `examples.py`).
 
 ---
 
