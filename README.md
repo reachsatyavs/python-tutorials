@@ -15,6 +15,7 @@ Modules use **numbered folders** so order matches your syllabus. The full roadma
 | 03 | [`03-operators/`](03-operators/README.md) | Arithmetic, comparison, logical, bitwise, identity, walrus, ternary — notes + runnable examples |
 | 04 | [`04-control-flows/`](04-control-flows/README.md) | `if`/`elif`/`else`, `while`, `for`, `break`, `continue`, `match`/`case`, guard clauses |
 | 05 | [`05-functions/`](05-functions/README.md) | `def`, return values, argument patterns (`*args`, `**kwargs`, `/`, `*`), lambda, builtins |
+| 06 | [`06-comprehensions-and-generators/`](06-comprehensions-and-generators/README.md) | List / dict / set comprehensions; generator expressions; `yield` and generator functions |
 | — | [`Hashing/`](Hashing/README.md) | Supplementary: how hashing works, dict internals, thread safety, try-it scripts |
 
 ---

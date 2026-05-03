@@ -7,7 +7,7 @@
 
 | Dir                        | Topic                                                                             | Status  |
 | -------------------------- | --------------------------------------------------------------------------------- | ------- |
-| `06-comprehensions/`       | List/dict/set comprehensions; generators (optional teaser)                        | Planned |
+| `06-comprehensions-and-generators/` | List / dict / set comprehensions; generator expressions; `yield` | Done |
 | `07-file-handling/`        | Paths, open/read/write, context managers                                          | Planned |
 | `08-modules-pip/`          | `import`, packages, `pip`, venv recap                                             | Planned |
 | `09-exception-handling/`   | try/except/finally, raising, custom exceptions                                    | Planned |
