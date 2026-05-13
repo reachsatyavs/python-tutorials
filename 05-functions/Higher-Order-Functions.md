@@ -1,4 +1,4 @@
-# `sorted`, `min`, `max`, `map`, `filter`, `reduce` — High Order Fuctions
+# `sorted`, `min`, `max`, `map`, `filter` — High Order Fuctions
 
 A higher-order function is a function that either accepts a function as an argument, or returns a function, or both.
 > All examples use the same employee list.  
@@ -29,7 +29,7 @@ def get_salary(e):
 lambda e: e["salary"]
 ```
 
-A lambda is just a function without a name. Both are callables. Both can be passed to `sorted`, `min`, `max`, `map`, `filter`, and `reduce` identically.
+A lambda is just a function without a name. Both are callables. Both can be passed to `sorted`, `min`, `max`, `map` and `filter` identically.
 
 Use named functions when teaching the concept. Use lambda once students understand it.
 
@@ -355,97 +355,7 @@ Age 25 or older:
 {'name': 'Carol', 'salary': 60000, 'age': 25}
 ```
 
----
 
-## 6. `reduce()` — combine all items into a single value
-
-`reduce` is not a built-in — it lives in the `functools` module.
-
-```python
-from functools import reduce
-```
-
-`reduce(fn, iterable, initial)` takes a function with **two parameters**.  
-It applies the function **pair by pair**, accumulating a single result.
-
-```
-Start:  accumulated = initial value (0)
-Step 1: fn(0,           item_0)  → new accumulated
-Step 2: fn(accumulated, item_1)  → new accumulated
-Step 3: fn(accumulated, item_2)  → final result
-```
-
-### Example A — total salary bill
-
-#### Named function
-
-```python
-from functools import reduce
-
-def add_salaries(total_so_far, e):
-    return total_so_far + e["salary"]
-
-total = reduce(add_salaries, employees, 0)
-print("Total salary bill:", total)
-```
-
-#### Lambda
-
-```python
-from functools import reduce
-
-total = reduce(lambda acc, e: acc + e["salary"], employees, 0)
-print("Total salary bill:", total)
-```
-
-**Output (same for both):**
-```
-Total salary bill: 190000
-```
-
-Step by step:
-```
-Start:  acc = 0
-Step 1: fn(0,      Alice)  → 0 + 50000      = 50000
-Step 2: fn(50000,  Bob)    → 50000 + 80000  = 130000
-Step 3: fn(130000, Carol)  → 130000 + 60000 = 190000
-Final:  190000
-```
-
-> The initial value `0` is important. Without it, `reduce` uses the first item (a full dict) as the starting value, then tries to add a dict to a number — which crashes.
-
----
-
-### Example B — find highest salary using reduce
-
-#### Named function
-
-```python
-def keep_higher_salary(current_max, e):
-    if e["salary"] > current_max:
-        return e["salary"]
-    return current_max
-
-highest = reduce(keep_higher_salary, employees, 0)
-print("Highest salary:", highest)
-```
-
-#### Lambda
-
-```python
-highest = reduce(lambda cur_max, e: e["salary"] if e["salary"] > cur_max else cur_max, employees, 0)
-print("Highest salary:", highest)
-```
-
-**Output (same for both):**
-```
-Highest salary: 80000
-```
-
-> In practice, `max(employees, key=lambda e: e["salary"])["salary"]` is simpler.  
-> `reduce` shines when you need custom accumulation that `sum`, `min`, or `max` cannot express.
-
----
 
 ## When to use a named function vs a lambda
 
@@ -469,11 +379,10 @@ Highest salary: 80000
 | `max(lst, key=fn)` | list | one item (whole dict) | No |
 | `map(fn, lst)` | list | new transformed values | No |
 | `filter(fn, lst)` | list | subset of original items | No |
-| `reduce(fn, lst, init)` | list | single accumulated value | No |
 
 ---
 
-## All six together — named function version
+## All five together — named function version
 
 ```python
 from functools import reduce
@@ -508,13 +417,11 @@ print("\n=== filter (salary > 55000) ===")
 for e in filter(earns_above_55k, employees):
     print(e)
 
-print("\n=== reduce (total salary bill) ===")
-print("Total salary bill:", reduce(add_salaries, employees, 0))
 ```
 
 ---
 
-## All six together — lambda version
+## All five together — lambda version
 
 ```python
 from functools import reduce
@@ -543,8 +450,6 @@ print("\n=== filter (salary > 55000) ===")
 for e in filter(lambda e: e["salary"] > 55000, employees):
     print(e)
 
-print("\n=== reduce (total salary bill) ===")
-print("Total salary bill:", reduce(lambda acc, e: acc + e["salary"], employees, 0))
 ```
 
 **Output (same for both scripts):**
@@ -569,10 +474,7 @@ Highest  : {'name': 'Bob',   'salary': 80000, 'age': 20}
 {'name': 'Bob',   'salary': 80000, 'age': 20}
 {'name': 'Carol', 'salary': 60000, 'age': 25}
 
-=== reduce (total salary bill) ===
-Total salary bill: 190000
 ```
 
 ---
 
-*Python Series · `github.com/reachsatyavs/python-tutorials`*
