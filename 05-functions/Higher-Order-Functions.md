@@ -6,6 +6,28 @@ A higher-order function is a function that either accepts a function as an argum
 
 ---
 
+## The five functions at a glance
+
+| Function | Purpose | Signature | What it returns |
+|---|---|---|---|
+| `sorted()` | Sort any iterable by a key | `sorted(iterable, key=fn, reverse=False)` | A **new sorted list** — original is untouched |
+| `min()` | Find the item with the smallest key value | `min(iterable, key=fn)` | The **whole item** (e.g. the full dict) that produced the smallest key, not the key itself |
+| `max()` | Find the item with the largest key value | `max(iterable, key=fn)` | The **whole item** (e.g. the full dict) that produced the largest key, not the key itself |
+| `map()` | Transform every item using a function | `map(fn, iterable)` | A lazy **map object** — wrap in `list()` to get a new list of transformed values. Original is untouched |
+| `filter()` | Keep only items where the function returns `True` | `filter(fn, iterable)` | A lazy **filter object** — wrap in `list()` to get a new list of matching items. Original is untouched |
+
+### What the `key` / `fn` argument must be
+
+| Function | What `fn` receives | What `fn` must return |
+|---|---|---|
+| `sorted(key=fn)` | One item from the iterable | A **comparable value** (number, string) used to decide order |
+| `min(key=fn)` | One item from the iterable | A **comparable value** — the item with the smallest result is returned |
+| `max(key=fn)` | One item from the iterable | A **comparable value** — the item with the largest result is returned |
+| `map(fn, ...)` | One item from the iterable | The **transformed value** to put in the output list |
+| `filter(fn, ...)` | One item from the iterable | `True` to **keep** the item, `False` to **drop** it |
+
+---
+
 ## The data
 
 ```python
