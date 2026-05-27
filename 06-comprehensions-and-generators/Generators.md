@@ -8,15 +8,18 @@
 2. [yield vs return](#2-yield-vs-return)
 3. [Generator as Iterator — next()](#3-generator-as-iterator--next)
 4. [Generator Expression ( )](#4-generator-expression--)
-5. [Why Generators? — Memory & Speed](#5-why-generators--memory--speed)
-6. [Use Case 1 — Large File Processing](#6-use-case-1--large-file-processing)
-7. [Use Case 2 — Infinite Sequences](#7-use-case-2--infinite-sequences)
-8. [Use Case 3 — Data Pipelines](#8-use-case-3--data-pipelines)
-9. [Use Case 4 — Pagination / Streaming](#9-use-case-4--pagination--streaming)
-10. [Use Case 5 — Fibonacci on Demand](#10-use-case-5--fibonacci-on-demand)
-11. [send() — Two-way Communication](#11-send--two-way-communication)
-12. [yield from — Delegating Generators](#12-yield-from--delegating-generators)
-13. [Quick Recap — Cheat Sheet](#13-quick-recap--cheat-sheet)
+5. [sum() with Generators vs List Comprehensions](#5-sum-with-generators-vs-list-comprehensions)
+6. [Why Generators? — Memory & Speed](#6-why-generators--memory--speed)
+7. [Generator vs range — Key Differences](#7-generator-vs-range--key-differences)
+8. [Use of Generators — 7 Practical Uses](#8-use-of-generators--7-practical-uses)
+9. [Use Case 1 — Large File Processing](#9-use-case-1--large-file-processing)
+10. [Use Case 2 — Infinite Sequences](#10-use-case-2--infinite-sequences)
+11. [Use Case 3 — Data Pipelines](#11-use-case-3--data-pipelines)
+12. [Use Case 4 — Pagination / Streaming](#12-use-case-4--pagination--streaming)
+13. [Use Case 5 — Fibonacci on Demand](#13-use-case-5--fibonacci-on-demand)
+14. [send() — Two-way Communication](#14-send--two-way-communication)
+15. [yield from — Delegating Generators](#15-yield-from--delegating-generators)
+16. [Quick Recap — Cheat Sheet](#16-quick-recap--cheat-sheet)
 
 ---
 
@@ -133,9 +136,52 @@ Generator expressions work directly inside `sum()`, `max()`, `min()`, `any()`, `
 total = sum(x**2 for x in range(1_000_000))   # no list built!
 ```
 
+**How to tell them apart — just the brackets:**
+
+| Syntax | Type | Behaviour |
+|---|---|---|
+| `(x**2 for x in range(10))` | `generator` | Lazy — one value at a time |
+| `[x**2 for x in range(10)]` | `list` | Eager — all values in memory now |
+
 ---
 
-## 5. Why Generators? — Memory & Speed
+## 5. `sum()` with Generators vs List Comprehensions
+
+**Generators are preferred when passing directly to `sum`, `max`, `min`, `any`, `all`.**
+
+```python
+# Generator expression — lazy (preferred)
+total = sum(x**2 for x in range(1_000_000))
+
+# List comprehension — eager (avoid for large data)
+total = sum([x**2 for x in range(1_000_000)])
+```
+
+Both give the same answer. The memory behaviour is completely different:
+
+```python
+import sys
+
+gen = (x**2 for x in range(1_000_000))
+lst = [x**2 for x in range(1_000_000)]
+
+print(sys.getsizeof(gen))   # 104 bytes
+print(sys.getsizeof(lst))   # 8448728 bytes  (~8 MB)
+```
+
+> **Rule:** If you are passing directly into `sum()`, `max()`, `min()`, `any()`, or `all()` — always use a generator expression `( )`. There is no reason to build the full list first.
+
+```python
+# All of these work with a generator expression — no list needed
+total   = sum(e["salary"] for e in employees)
+highest = max(e["salary"] for e in employees)
+any_rich = any(e["salary"] > 100_000 for e in employees)
+all_pass = all(score >= 60 for score in scores)
+```
+
+---
+
+## 6. Why Generators? — Memory & Speed
 
 ### Memory comparison
 
@@ -171,7 +217,257 @@ Generator is faster too — no time wasted building and then scanning a list.
 
 ---
 
-## 6. Use Case 1 — Large File Processing
+## 7. Generator vs `range` — Key Differences
+
+Both are **lazy** — they produce values on demand without storing them all in memory. But they are different types with different capabilities.
+
+```python
+r = range(10)
+print(type(r))               # <class 'range'>
+
+g = (x**2 for x in range(10))
+print(type(g))               # <class 'generator'>
+```
+
+### Side-by-side comparison
+
+| Feature | `range` | Generator |
+|---|---|---|
+| Lazy (computes on demand) | ✅ | ✅ |
+| One value at a time | ✅ | ✅ |
+| **Can iterate again** | ✅ reusable | ❌ exhausted after first use |
+| **Supports `len()`** | ✅ | ❌ |
+| **Supports indexing `[i]`** | ✅ | ❌ |
+| **Can be infinite** | ❌ | ✅ |
+| **Custom logic per value** | ❌ only integers | ✅ any expression |
+
+### Key difference — reusability
+
+```python
+# range — can iterate multiple times
+r = range(5)
+for i in r: print(i, end=" ")    # 0 1 2 3 4
+for i in r: print(i, end=" ")    # 0 1 2 3 4  ✅ works again
+
+# generator — one time only
+g = (x**2 for x in range(5))
+for i in g: print(i, end=" ")    # 0 1 4 9 16
+for i in g: print(i, end=" ")    # (nothing)  ❌ already exhausted
+```
+
+### Mental model
+
+```
+range      →  lazy integer sequence  (reusable, has length, has index, integers only)
+generator  →  lazy value stream      (one-time, no length, no index, any logic/type)
+```
+
+### When to use which
+
+| You need | Use |
+|---|---|
+| Integers from A to B with a step | `range` |
+| Iterate the same sequence more than once | `range` or list |
+| Access by index `seq[3]` | `range` or list |
+| Values produced by custom logic | Generator |
+| Infinite sequence | Generator |
+| Transform or filter items on the fly | Generator |
+| Memory-efficient one-pass processing | Generator |
+
+---
+
+## 8. Use of Generators — 7 Practical Uses
+
+> A generator is not just a memory trick.
+> It is the right tool whenever you need to **produce values one at a time** instead of building everything upfront.
+
+### At a glance
+
+| Use | Problem it solves | Key idea |
+|---|---|---|
+| **Large file / dataset** | Cannot load the whole file into RAM | Read and yield one line at a time |
+| **Infinite sequence** | A list cannot be infinite | `while True: yield` — take only what you need |
+| **Data pipeline** | Multi-step transform without intermediate lists | Chain generators — nothing runs until consumed |
+| **Pagination / streaming** | Process results in batches, not all at once | Yield one page/chunk at a time |
+| **On-demand values** | Produce the next value only when asked | Generator remembers state between calls |
+| **Database rows** | Cannot load millions of DB rows into memory | Yield one row at a time from the cursor |
+| **ML / AI batches** | GPU memory cannot hold the full dataset | Yield one batch at a time during training |
+
+---
+
+### Use 1 — Large data without running out of memory
+
+```python
+# Without generator — loads every line into a list first (dangerous for big files)
+lines = open("sales.csv").readlines()   # could be millions of lines
+
+# With generator — reads one line at a time, constant memory
+def read_csv(filepath):
+    with open(filepath) as f:
+        for line in f:
+            yield line.strip().split(",")
+
+for row in read_csv("sales.csv"):
+    print(row[0], row[1])   # process one row, then move on
+```
+
+Memory used = one row at a time, regardless of file size.
+
+---
+
+### Use 2 — Infinite sequences
+
+```python
+# A list of "all even numbers" is impossible.
+# A generator can model it — you just take what you need.
+
+def even_numbers():
+    n = 0
+    while True:          # runs forever — safe because of yield
+        yield n
+        n += 2
+
+evens = even_numbers()
+print(next(evens))   # 0
+print(next(evens))   # 2
+print(next(evens))   # 4
+
+# Take only the first 5
+from itertools import islice
+print(list(islice(even_numbers(), 5)))   # [0, 2, 4, 6, 8]
+```
+
+---
+
+### Use 3 — Lazy data pipeline
+
+```python
+# Each stage is a generator. Nothing runs until the final loop consumes it.
+
+def read_numbers(data):
+    for x in data:
+        yield int(x)           # stage 1: convert to int
+
+def keep_positive(numbers):
+    for n in numbers:
+        if n > 0:
+            yield n            # stage 2: filter
+
+def doubled(numbers):
+    for n in numbers:
+        yield n * 2            # stage 3: transform
+
+raw    = ["3", "-1", "7", "-2", "5"]
+stage1 = read_numbers(raw)     # nothing runs yet
+stage2 = keep_positive(stage1) # nothing runs yet
+stage3 = doubled(stage2)       # nothing runs yet
+
+for val in stage3:             # NOW it runs, one item at a time
+    print(val)
+# 6  14  10
+```
+
+---
+
+### Use 4 — Pagination / chunked streaming
+
+```python
+# Instead of returning all records at once, yield one page at a time.
+
+def paginate(records, page_size):
+    for i in range(0, len(records), page_size):
+        yield records[i : i + page_size]
+
+records = list(range(1, 22))   # 21 records
+
+for page_num, page in enumerate(paginate(records, 5), start=1):
+    print(f"Page {page_num}: {page}")
+
+# Page 1: [1, 2, 3, 4, 5]
+# Page 2: [6, 7, 8, 9, 10]
+# Page 3: [11, 12, 13, 14, 15]
+# Page 4: [16, 17, 18, 19, 20]
+# Page 5: [21]
+```
+
+Same pattern works for database cursors, API responses, and network streams.
+
+---
+
+### Use 5 — On-demand values (generator as a stateful counter)
+
+```python
+# The generator remembers where it left off between calls.
+
+def counter(start=1):
+    n = start
+    while True:
+        yield n
+        n += 1
+
+ticket = counter(start=1000)   # ticket number machine
+print(next(ticket))   # 1000
+print(next(ticket))   # 1001
+print(next(ticket))   # 1002
+# each call gives the next number — state is kept inside the generator
+```
+
+---
+
+### Use 6 — Database rows
+
+Loading all rows from a large table into memory at once can crash a program. Generators let you process one row at a time.
+
+```python
+def fetch_rows(cursor):
+    """Yield one database row at a time — never loads all rows into memory."""
+    for row in cursor:
+        yield row
+
+# Usage
+# cursor = db.execute("SELECT * FROM orders")
+# for row in fetch_rows(cursor):
+#     process(row)
+```
+
+Memory stays flat no matter how many rows are in the table.
+
+---
+
+### Use 7 — ML / AI batch training
+
+GPU memory cannot hold an entire dataset. Generators feed one batch at a time.
+
+```python
+def batch_generator(data, batch_size=32):
+    """Yield one training batch at a time."""
+    for i in range(0, len(data), batch_size):
+        yield data[i : i + batch_size]
+
+# training_data = [...]   # could be millions of samples
+for batch in batch_generator(training_data, batch_size=32):
+    model.train(batch)    # only 32 samples in memory at once
+```
+
+> This is exactly how PyTorch `DataLoader` and TensorFlow `tf.data` feed training data — generators under the hood.
+
+---
+
+### When to use a generator vs a list
+
+| Situation | Use |
+|---|---|
+| Data is large or comes from a file/API | Generator — constant memory |
+| Sequence is infinite | Generator — only `yield` can do this |
+| You need to iterate **more than once** | List — generators exhaust after one pass |
+| You need random access by index `lst[3]` | List — generators cannot be indexed |
+| Passing to `sum()` / `max()` / `any()` / `all()` | Generator expression `()` — no list needed |
+| You need to build the full collection first | List |
+| Integers only, with a step | `range` — reusable, supports index and len |
+
+---
+
+## 9. Use Case 1 — Large File Processing
 
 Reading an entire large file into memory crashes programs. Generators read one line at a time.
 
@@ -198,7 +494,7 @@ Memory stays **constant** regardless of file size — 10 KB or 10 GB, same RAM u
 
 ---
 
-## 7. Use Case 2 — Infinite Sequences
+## 10. Use Case 2 — Infinite Sequences
 
 A list cannot be infinite. A generator can model sequences that never end — you just take what you need.
 
@@ -231,7 +527,7 @@ print(list(islice(evens(), 10)))
 
 ---
 
-## 8. Use Case 3 — Data Pipelines
+## 11. Use Case 3 — Data Pipelines
 
 Chain generators together — each stage processes one item at a time. Nothing runs until the final stage is consumed.
 
@@ -268,7 +564,7 @@ This is how tools like `pandas`, `dask`, and `spark` process data — lazy evalu
 
 ---
 
-## 9. Use Case 4 — Pagination / Streaming
+## 12. Use Case 4 — Pagination / Streaming
 
 ```python
 def paginate(data, page_size):
@@ -292,7 +588,7 @@ The same pattern works for streaming API responses, database cursors, and networ
 
 ---
 
-## 10. Use Case 5 — Fibonacci on Demand
+## 13. Use Case 5 — Fibonacci on Demand
 
 ```python
 def fibonacci():
@@ -314,7 +610,7 @@ print(large)   # 1597
 
 ---
 
-## 11. send() — Two-way Communication
+## 14. send() — Two-way Communication
 
 A generator can **receive** values too — `send()` passes a value in and `yield` receives it.
 
@@ -338,7 +634,7 @@ print(rt.send(15))            # total = 50
 
 ---
 
-## 12. yield from — Delegating Generators
+## 15. yield from — Delegating Generators
 
 `yield from` lets one generator delegate to another — cleaner than a manual loop.
 
@@ -374,7 +670,7 @@ print(result)   # [1, 2, 3, 4, 5, 6, 7]
 
 ---
 
-## 13. Quick Recap — Cheat Sheet
+## 16. Quick Recap — Cheat Sheet
 
 ### yield vs return
 
@@ -385,6 +681,16 @@ print(result)   # [1, 2, 3, 4, 5, 6, 7]
 | Returns | Value | Generator object |
 | Memory | All upfront | One at a time |
 
+### Generator vs range
+
+| Feature | `range` | Generator |
+|---|---|---|
+| Lazy | ✅ | ✅ |
+| Reusable | ✅ | ❌ exhausted after one pass |
+| `len()` / indexing | ✅ | ❌ |
+| Infinite sequences | ❌ | ✅ |
+| Custom logic / any type | ❌ integers only | ✅ |
+
 ### Generator syntax
 
 ```python
@@ -392,7 +698,7 @@ print(result)   # [1, 2, 3, 4, 5, 6, 7]
 def gen():
     yield value
 
-# generator expression
+# generator expression — one-liner
 g = (expr for x in it if cond)
 
 # next — pull one value
@@ -401,8 +707,18 @@ next(g)
 # send — push a value in
 g.send(value)
 
-# yield from — delegate
+# yield from — delegate to another generator
 yield from other_gen()
+```
+
+### sum() — generator vs list
+
+```python
+# Preferred — generator expression, no list built
+total = sum(x**2 for x in range(1_000_000))
+
+# Avoid — list comprehension, 8 MB wasted
+total = sum([x**2 for x in range(1_000_000)])
 ```
 
 ### When to use generators
@@ -412,9 +728,12 @@ yield from other_gen()
 | Large file / dataset | ✅ yes — constant memory |
 | Infinite sequence | ✅ yes — only `yield` can do this |
 | Data pipeline / stages | ✅ yes — lazy chaining |
-| Streaming / pagination | ✅ yes — process batch by batch |
+| Streaming / pagination / DB rows | ✅ yes — process batch by batch |
+| ML / AI training batches | ✅ yes — GPU memory cannot hold full dataset |
+| Passing to `sum` / `max` / `any` / `all` | ✅ yes — use `()` not `[]` |
 | Need list indexing `[i]` | ❌ no — use a list |
 | Iterate more than once | ❌ no — generators exhaust after one pass |
+| Integer range, reusable | ❌ no — use `range` |
 
 ### Key rules
 
@@ -423,6 +742,7 @@ yield from other_gen()
 - Always `next(gen)` once before `send()` to prime it
 - Generator expressions `( )` are the quick one-liner form
 - `yield from` replaces a manual `for` loop when delegating
+- `range` is reusable; a generator is not
 
 ---
 
