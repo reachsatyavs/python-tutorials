@@ -11,6 +11,7 @@ List / dict / set comprehensions and generators are the same *idea* (iterate, op
 
 | File                                                       | Type   | What it covers                                                                                           |
 | ---------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------- |
+| `[Range.md](Range.md)`                                     | Notes  | `range()` — all 3 signatures, counting up/down, step, lazy memory model, use in comprehensions, common mistakes |
 | `[Comprehensions.md](Comprehensions.md)`                   | Notes  | Full topic write-up — list / set / dict comprehensions, generator expressions, mental model, cheat sheet |
 | `[Python_Comprehensions.pptx](Python_Comprehensions.pptx)` | Slides | Deck aligned with `Comprehensions.md`                                                                    |
 | `[comprehensions.py](comprehensions.py)`                   | Script | 32 runnable examples (prints sections as you run it)                                                     |
@@ -23,9 +24,10 @@ List / dict / set comprehensions and generators are the same *idea* (iterate, op
 
 ## Learning order
 
-1. Walk through `[Comprehensions.md](Comprehensions.md)` (or the slides) in section order.
-2. Run `python comprehensions.py` from this folder to see all examples on the terminal.
-3. Read `[Generators.md](Generators.md)` (or `[Python_Generators.pptx](Python_Generators.pptx)`), then run `python generators.py` for generator / `yield` examples.
+1. Read `[Range.md](Range.md)` — `range()` is used in nearly every example that follows.
+2. Walk through `[Comprehensions.md](Comprehensions.md)` (or the slides) in section order.
+3. Run `python comprehensions.py` from this folder to see all examples on the terminal.
+4. Read `[Generators.md](Generators.md)` (or `[Python_Generators.pptx](Python_Generators.pptx)`), then run `python generators.py` for generator / `yield` examples.
 
 ---
 
