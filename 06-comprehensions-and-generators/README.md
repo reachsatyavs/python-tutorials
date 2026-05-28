@@ -47,4 +47,4 @@ List / dict / set comprehensions and generators are the same *idea* (iterate, op
 
 ## Next module
 
-**07 — File handling** (planned): paths, `open`, context managers.
+**[07 — Decorators](../07-decorators/README.md):** what decorators are, `@` syntax, `functools.wraps`, stacking, decorator factories, logging/timing/caching/auth use cases, class-based decorators, built-in `@staticmethod` / `@classmethod` / `@property`.
