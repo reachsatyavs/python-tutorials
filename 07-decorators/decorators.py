@@ -2,7 +2,7 @@
 Python Decorators — 16 Runnable Examples
 Module 07 · python-tutorials
 
-Run:  python decorators.py
+Run:  python3 decorators.py
 Each section prints a header so you can follow along with Decorators.md.
 """
 
@@ -38,9 +38,59 @@ say_hello()
 
 
 # ──────────────────────────────────────────────────────────
-# Example 02 — @ syntax (shorthand for the same thing)
+# Example 02 — The problem decorators solve
+#              Without @decorator — repetition in every function
+#              With    @decorator — write the logic once
 # ──────────────────────────────────────────────────────────
-section("02 — @ syntax")
+section("02 — The problem: repetition without decorators")
+
+# ── BEFORE: logging logic copy-pasted into every function ──
+def add_no_dec(a, b):
+    print(f"[LOG] add called")
+    return a + b
+
+def subtract_no_dec(a, b):
+    print(f"[LOG] subtract called")
+    return a - b
+
+def multiply_no_dec(a, b):
+    print(f"[LOG] multiply called")
+    return a * b
+
+print("Without decorator:")
+print(add_no_dec(3, 5))
+print(subtract_no_dec(10, 4))
+print(multiply_no_dec(3, 5))
+
+# ── AFTER: one decorator, zero repetition ──
+def log(func):
+    def wrapper(*args, **kwargs):
+        print(f"[LOG] {func.__name__} called")
+        return func(*args, **kwargs)
+    return wrapper
+
+@log
+def add(a, b):
+    return a + b
+
+@log
+def subtract(a, b):
+    return a - b
+
+@log
+def multiply(a, b):
+    return a * b
+
+print("\nWith @log decorator:")
+print(add(3, 5))
+print(subtract(10, 4))
+print(multiply(3, 5))
+
+
+# ──────────────────────────────────────────────────────────
+# Example 03 — @ syntax (shorthand for the same thing)
+# ──────────────────────────────────────────────────────────
+section("03 — @ syntax")
 
 def shout(func):
     def wrapper():
@@ -56,11 +106,11 @@ greet()
 
 
 # ──────────────────────────────────────────────────────────
-# Example 03 — *args and **kwargs — handle any signature
+# Example 04 — *args and **kwargs — handle any signature
 # ──────────────────────────────────────────────────────────
-section("03 — *args and **kwargs in wrapper")
+section("04 — *args and **kwargs in wrapper")
 
-def log(func):
+def log_v1(func):
     def wrapper(*args, **kwargs):
         print(f"[LOG] {func.__name__} called  args={args}  kwargs={kwargs}")
         result = func(*args, **kwargs)
@@ -68,51 +118,51 @@ def log(func):
         return result
     return wrapper
 
-@log
-def add(a, b):
+@log_v1
+def add_logged(a, b):
     return a + b
 
-@log
+@log_v1
 def greet_person(name, greeting="Hello"):
     return f"{greeting}, {name}!"
 
-add(3, 5)
+add_logged(3, 5)
 greet_person("Alice")
 greet_person("Bob", greeting="Hi")
 
 
 # ──────────────────────────────────────────────────────────
-# Example 04 — functools.wraps — preserve function identity
+# Example 05 — functools.wraps — preserve function identity
 # ──────────────────────────────────────────────────────────
-section("04 — functools.wraps")
+section("05 — functools.wraps")
 
 def log_v2(func):
-    @functools.wraps(func)         # ← copies __name__, __doc__, __module__
+    @functools.wraps(func)         # copies __name__, __doc__, __module__
     def wrapper(*args, **kwargs):
         print(f"[LOG] {func.__name__}")
         return func(*args, **kwargs)
     return wrapper
 
 @log_v2
-def multiply(a, b):
+def multiply_logged(a, b):
     """Multiply two numbers."""
     return a * b
 
-multiply(4, 7)
-print(f"  __name__ : {multiply.__name__}")   # multiply  ✅
-print(f"  __doc__  : {multiply.__doc__}")    # Multiply two numbers.  ✅
+multiply_logged(4, 7)
+print(f"  __name__ : {multiply_logged.__name__}")   # multiply_logged  ✅
+print(f"  __doc__  : {multiply_logged.__doc__}")    # Multiply two numbers.  ✅
 
 
 # ──────────────────────────────────────────────────────────
-# Example 05 — Timing decorator
+# Example 06 — Timing decorator
 # ──────────────────────────────────────────────────────────
-section("05 — Timer decorator")
+section("06 — Timer decorator")
 
 def timer(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        start  = time.perf_counter()
-        result = func(*args, **kwargs)
+        start   = time.perf_counter()
+        result  = func(*args, **kwargs)
         elapsed = time.perf_counter() - start
         print(f"[TIMER] {func.__name__} took {elapsed:.6f}s")
         return result
@@ -128,9 +178,9 @@ print(f"  Result: {result:,}")
 
 
 # ──────────────────────────────────────────────────────────
-# Example 06 — Stacking two decorators
+# Example 07 — Stacking two decorators
 # ──────────────────────────────────────────────────────────
-section("06 — Stacking decorators (bottom-up application)")
+section("07 — Stacking decorators (bottom-up application)")
 
 def bold(func):
     @functools.wraps(func)
@@ -150,13 +200,13 @@ def message(name):
     return f"hello, {name}"
 
 print(message("alice"))           # **HELLO, ALICE**
-print(f"  (equivalent to: bold(upper(message))('alice'))")
+print("  (equivalent to: bold(upper(message))('alice'))")
 
 
 # ──────────────────────────────────────────────────────────
-# Example 07 — Decorator factory (decorator with parameters)
+# Example 08 — Decorator factory (decorator with parameters)
 # ──────────────────────────────────────────────────────────
-section("07 — Decorator factory  @log(level='DEBUG')")
+section("08 — Decorator factory  @log(level='DEBUG')")
 
 def log_level(level="INFO"):      # outer: receives parameter
     def decorator(func):          # middle: receives function
@@ -180,9 +230,9 @@ sqrt(16)
 
 
 # ──────────────────────────────────────────────────────────
-# Example 08 — Repeat decorator factory
+# Example 09 — Repeat decorator factory
 # ──────────────────────────────────────────────────────────
-section("08 — @repeat(n) — call the function n times")
+section("09 — @repeat(n) — call the function n times")
 
 def repeat(n):
     def decorator(func):
@@ -201,9 +251,9 @@ say_hi()
 
 
 # ──────────────────────────────────────────────────────────
-# Example 09 — Caching decorator (manual implementation)
+# Example 10 — Caching decorator (manual implementation)
 # ──────────────────────────────────────────────────────────
-section("09 — Manual cache decorator")
+section("10 — Manual cache decorator")
 
 def cache(func):
     store = {}
@@ -228,9 +278,9 @@ for i in range(6):
 
 
 # ──────────────────────────────────────────────────────────
-# Example 10 — functools.lru_cache (Python built-in cache)
+# Example 11 — functools.lru_cache (Python built-in cache)
 # ──────────────────────────────────────────────────────────
-section("10 — @functools.lru_cache  (built-in memoisation)")
+section("11 — @functools.lru_cache  (built-in memoisation)")
 
 @functools.lru_cache(maxsize=128)
 def fibonacci(n):
@@ -245,9 +295,9 @@ print(f"  cache_info: hits={info.hits}  misses={info.misses}  maxsize={info.maxs
 
 
 # ──────────────────────────────────────────────────────────
-# Example 11 — Input validation decorator
+# Example 12 — Input validation decorator
 # ──────────────────────────────────────────────────────────
-section("11 — Input validation decorator")
+section("12 — Input validation decorator")
 
 def validate_positive(func):
     @functools.wraps(func)
@@ -271,9 +321,9 @@ except ValueError as e:
 
 
 # ──────────────────────────────────────────────────────────
-# Example 12 — Access control decorator
+# Example 13 — Access control decorator
 # ──────────────────────────────────────────────────────────
-section("12 — Access control / authentication decorator")
+section("13 — Access control / authentication decorator")
 
 def require_auth(func):
     @functools.wraps(func)
@@ -298,9 +348,9 @@ except PermissionError as e:
 
 
 # ──────────────────────────────────────────────────────────
-# Example 13 — Retry decorator factory
+# Example 14 — Retry decorator factory
 # ──────────────────────────────────────────────────────────
-section("13 — @retry(times, delay) — retry on failure")
+section("14 — @retry(times, delay) — retry on failure")
 
 import random
 random.seed(42)
@@ -335,49 +385,54 @@ print(f"  Final result: {result}")
 
 
 # ──────────────────────────────────────────────────────────
-# Example 14 — Decorating built-in len and range
-# (from demo_samples/decorator.py)
+# Example 15 — Decorating built-in functions
+#              (original code from decorator.py)
 # ──────────────────────────────────────────────────────────
-section("14 — Wrapping built-in len and range")
+section("15 — Wrapping built-in len and range")
 
+# Save originals before ANY override
 original_len   = builtins.len
 original_print = builtins.print
 original_range = builtins.range
 
+# ── len decorator ──────────────────────────────────────────
 def len_decorator(func):
     def wrapper(obj):
-        original_print(f"  [LOG] len on {type(obj).__name__} → size {original_len(obj)}")
+        original_print(f"[LOG]: {type(obj).__name__} {original_len(obj)}")
         return func(obj)
     return wrapper
 
-builtins.len = len_decorator(builtins.len)
+builtins.len = len_decorator(builtins.len)   # decorator applied manually
 
 len([1, 2, 3])
 len({"a": 1, "b": 2})
 len("hello world")
 
-# restore so the rest of the script is not affected
-builtins.len = original_len
+builtins.len = original_len   # restore immediately
 
-# range decorator — makes stop inclusive
+# ── range decorator — makes stop inclusive ─────────────────
 def range_decorator(func):
-    def wrapper(start=0, stop=10, step=1):
-        original_print(f"  [LOG] range({start}, {stop}, {step}) → making stop inclusive")
-        return func(start, stop + 1, step)
-    return wrapper
+    def return_modified_range(start: int = 0, stop: int = 10, step: int = 1):
+        original_print(f"[LOG]: range called with args {start} {stop} {step}")
+        result = func(start, stop + 1, step)   # stop+1 makes it inclusive
+        return result
+    return return_modified_range
 
 builtins.range = range_decorator(builtins.range)
 
-print(f"  range(1, 5) with decorator : {list(range(1, 5))}")   # [1,2,3,4,5]
-print(f"  original range(1, 5)       : {list(original_range(1, 5))}")  # [1,2,3,4]
+lst = list(range(1, 5))
+original_print(f"  With decorator  range(1, 5) → {lst}")     # [1, 2, 3, 4, 5]
 
-builtins.range = original_range   # restore
+lst = list(original_range(1, 5))
+original_print(f"  Original        range(1, 5) → {lst}")     # [1, 2, 3, 4]
+
+builtins.range = original_range   # restore so remaining examples are unaffected
 
 
 # ──────────────────────────────────────────────────────────
-# Example 15 — Class-based decorator (maintains state)
+# Example 16 — Class-based decorator (maintains state)
 # ──────────────────────────────────────────────────────────
-section("15 — Class-based decorator with __call__")
+section("16 — Class-based decorator with __call__")
 
 class CountCalls:
     """Counts how many times the decorated function is called."""
@@ -403,9 +458,9 @@ print(f"  Total calls: {greet_user.call_count}")
 
 
 # ──────────────────────────────────────────────────────────
-# Example 16 — Combining timer + log + lru_cache
+# Bonus — Combining @timer + @log_level + @lru_cache
 # ──────────────────────────────────────────────────────────
-section("16 — Stack: @timer + @log_level + @lru_cache")
+section("Bonus — Stack: @timer + @log_level + @lru_cache")
 
 @timer
 @log_level(level="INFO")
@@ -420,5 +475,5 @@ print(f"  expensive(10) = {expensive(10)}  ← from cache, faster")
 print(f"  expensive(20) = {expensive(20)}")
 
 print(f"\n{SEP}")
-print("  All 16 examples complete.")
+print("  All examples complete.")
 print(SEP)

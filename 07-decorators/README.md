@@ -37,4 +37,4 @@ A decorator is a function that **wraps another function** to add behaviour befor
 
 ## Next module
 
-**08 — File Handling** (planned): `open`, `with`, reading/writing files, `pathlib`, CSV, JSON.
+**[08 — File Handling](../08-file-handling/README.md):** `open()`, file modes, reading/writing text files, the `with` statement, `pathlib`, CSV with `csv.DictReader`/`DictWriter`, JSON with `json.load`/`json.dump`, directory operations, error handling.
