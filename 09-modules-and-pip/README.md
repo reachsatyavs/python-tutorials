@@ -43,4 +43,4 @@ A **module** is any `.py` file. A **package** is a folder of modules. Together t
 
 ## Next module
 
-**10 — Exception Handling** (planned): `try / except / else / finally`, raising exceptions, custom exception classes, and best practices.
+**[10 — OOP](../10-oop/README.md):** classes, objects, `__init__`, `self`, class vs instance variables, methods, encapsulation, inheritance, polymorphism, abstraction.
