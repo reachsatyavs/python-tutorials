@@ -4,47 +4,98 @@
 
 ## Why do you need OOP?
 
-Imagine you are writing a program to manage 100 students. Without OOP:
+### The real problem — a silent bug
+
+Here is a bank account simulation written the procedural way:
 
 ```python
-# Procedural approach — parallel variables for every student
-student1_name  = "Alice"
-student1_grade = 90
-student1_email = "alice@school.com"
+# ───── WITHOUT OOP — a bug creeps in silently ─────────────
 
-student2_name  = "Bob"
-student2_grade = 75
-student2_email = "bob@school.com"
+satya_balance = 1000
+priya_balance = 500
 
-# What if you need to print a report for each?
-def print_report(name, grade, email):
-    print(f"{name} | Grade: {grade} | {email}")
+def withdraw(balance, amount):
+    if amount > balance:
+        print("Insufficient funds")
+        return balance
+    return balance - amount
 
-print_report(student1_name, student1_grade, student1_email)
-print_report(student2_name, student2_grade, student2_email)
+satya_balance = withdraw(satya_balance, 200)   # ✅ balance reassigned: 800
+priya_balance = withdraw(priya_balance, 100)   # ✅ balance reassigned: 400
+
+# Now a teammate writes a new feature and forgets to reassign:
+withdraw(satya_balance, 50)   # ← called but return value thrown away!
+                               #   nothing ties "balance" to "satya"
+
+print(satya_balance)  # 800 — wrong! should be 750
+                      # No error. No warning. Silent bug.
 ```
 
-This works for 2 students. With 100 students it becomes unmaintainable — variables scatter everywhere, functions have no idea which student they belong to, and adding a new field (like `phone`) means changing every function.
-
-**OOP solves this by keeping data and behaviour together in one place.**
+**Why does this happen?** In procedural code, the data (`satya_balance`) and the function that changes it (`withdraw`) are two separate things connected only by convention — you have to remember to pass the right variable *and* reassign the result. Forget either step and you get a wrong answer with no feedback from Python.
 
 ```python
-# OOP approach — one class, unlimited objects
-class Student:
-    def __init__(self, name, grade, email):
-        self.name  = name
-        self.grade = grade
-        self.email = email
+# ───── WITH OOP — the bug becomes impossible ──────────────
 
-    def print_report(self):
-        print(f"{self.name} | Grade: {self.grade} | {self.email}")
+class Account:
+    def __init__(self, owner, balance):
+        self.owner   = owner
+        self.balance = balance
 
-s1 = Student("Alice", 90, "alice@school.com")
-s2 = Student("Bob",   75, "bob@school.com")
+    def withdraw(self, amount):
+        if amount > self.balance:
+            print(f"  Insufficient funds for {self.owner}")
+            return
+        self.balance -= amount   # data and method are one unit — state lives here
 
-s1.print_report()   # Alice | Grade: 90 | alice@school.com
-s2.print_report()   # Bob   | Grade: 75 | bob@school.com
+satya = Account("Satya", 1000)
+priya = Account("Priya",  500)
+
+satya.withdraw(200)   # satya.balance is now 800
+priya.withdraw(100)   # priya.balance is now 400
+satya.withdraw(50)    # satya.balance is now 750 — no reassignment needed
+
+print(satya.balance)  # 750 — correct, always
 ```
+
+**Output:**
+```
+750
+```
+
+The bug from the procedural version is *structurally impossible* here. `satya.withdraw(50)` operates directly on `satya.balance` — there is no separate variable to reassign, and it cannot accidentally change `priya`'s balance. The data and the method that changes it are the same unit.
+
+> **OOP advantage isn't just organisation — it's correctness, by construction.**
+
+---
+
+### The scaling problem — copy-paste explodes
+
+Beyond bugs, procedural code does not scale. Every new "thing" requires a fresh round of copy-pasted variables and functions:
+
+```python
+# ─── Procedural — adding a third account means more parallel variables ───
+satya_balance  = 1000
+priya_balance  = 500
+ravi_balance   = 2000   # new variable
+ravi_owner     = "Ravi" # another new variable
+
+def withdraw(balance, amount): ...
+def deposit(balance, amount):  ...
+def show_balance(owner, balance): ...
+
+show_balance("Satya", satya_balance)
+show_balance("Priya", priya_balance)
+show_balance("Ravi",  ravi_balance)   # easy to pass wrong variable
+
+# ─── OOP — adding a third account is one line ────────────────────────────
+ravi = Account("Ravi", 2000)          # done
+```
+
+> With a class, every new object is **one line**. The logic is written once, reused forever.
+
+---
+
+**OOP solves both problems by keeping data and behaviour together in one place.**
 
 ---
 
@@ -133,54 +184,70 @@ Hide complexity. Define what something must do, not how it does it.
 
 ---
 
-## Basic Example — Class vs No Class
+## Basic Example — Score Tracker (procedural bug vs OOP fix)
+
+A score tracker for two players. Watch the bug appear in procedural code and disappear in OOP.
 
 ```python
-# ─── WITHOUT OOP ─────────────────────────────────────────
-name  = "Rex"
-breed = "Labrador"
-age   = 3
+# ─── WITHOUT OOP — easy to write a bug ───────────────────
 
-def dog_speak(name):
-    return f"{name} says: Woof!"
+player1_name  = "Alice"
+player1_score = 0
 
-def dog_info(name, breed, age):
-    return f"{name} is a {breed}, {age} years old"
+player2_name  = "Bob"
+player2_score = 0
 
-print(dog_speak(name))
-print(dog_info(name, breed, age))
+def add_score(score, points):
+    return score + points
 
-# ─── WITH OOP ─────────────────────────────────────────────
-class Dog:
-    def __init__(self, name, breed, age):
+# Teammate writes this — looks right, but result is discarded
+add_score(player1_score, 10)        # ← bug! result not saved
+player2_score = add_score(player2_score, 5)  # ✅ saved correctly
+
+print(player1_score)  # 0  ← wrong! should be 10, silent bug
+print(player2_score)  # 5  ← correct
+
+# ─── WITH OOP — state lives inside the object ─────────────
+
+class Player:
+    def __init__(self, name):
         self.name  = name
-        self.breed = breed
-        self.age   = age
+        self.score = 0
 
-    def speak(self):
-        return f"{self.name} says: Woof!"
+    def add_score(self, points):
+        self.score += points        # always updates this player's score
+        print(f"  {self.name}: +{points} → total {self.score}")
 
-    def info(self):
-        return f"{self.name} is a {self.breed}, {self.age} years old"
+    def reset(self):
+        self.score = 0
 
-rex   = Dog("Rex",   "Labrador", 3)
-buddy = Dog("Buddy", "Poodle",   5)
+    def status(self):
+        return f"  {self.name}: {self.score} pts"
 
-print(rex.speak())          # Rex says: Woof!
-print(buddy.info())         # Buddy is a Poodle, 5 years old
-print(rex.info())           # Rex is a Labrador, 3 years old
+
+alice = Player("Alice")
+bob   = Player("Bob")
+
+alice.add_score(10)   # Alice: +10 → total 10
+alice.add_score(5)    # Alice: +5  → total 15
+bob.add_score(8)      # Bob:   +8  → total 8
+bob.add_score(12)     # Bob:   +12 → total 20
+
+print(alice.status())  # Alice: 15 pts
+print(bob.status())    # Bob:   20 pts
 ```
 
 **Output:**
 ```
-Rex says: Woof!
-Rex is a Labrador, 3 years old
-Rex says: Woof!
-Buddy is a Poodle, 5 years old
-Rex is a Labrador, 3 years old
+  Alice: +10 → total 10
+  Alice: +5  → total 15
+  Bob:   +8  → total 8
+  Bob:   +12 → total 20
+  Alice: 15 pts
+  Bob:   20 pts
 ```
 
-Notice: once the `Dog` class is defined, creating another dog takes one line. With procedural code, you would need new variables for every dog.
+`alice.add_score(10)` can only ever update Alice's score. You cannot accidentally call it on Bob's data, and there is no return value to forget to save. The state and the method are the same thing.
 
 ---
 
@@ -243,10 +310,12 @@ book2.return_book() # 'Clean Code' returned. Copies now: 1
 
 ## Key Takeaways
 
-- OOP organises code around **objects** — things that have data and behaviour.
+- OOP organises code around **objects** — things that have data and behaviour bundled together.
 - A **class** is a blueprint; an **object** is one real instance of that blueprint.
-- The 4 pillars are **Encapsulation, Inheritance, Polymorphism, Abstraction**.
-- OOP shines when modelling real-world entities or building systems that grow over time.
+- In procedural code, data and the function that changes it are two separate things — you can forget to pass the right variable or forget to save the return value. **OOP makes that category of bug impossible.**
+- Every new "thing" (account, player, book) in OOP is **one line**: `x = ClassName(...)`. In procedural code it is a new round of copy-pasted variables.
+- The real OOP advantage is **correctness by construction**, not just shorter code.
+- The 4 pillars are **Encapsulation, Inheritance, Polymorphism, Abstraction** — each covered in its own file.
 - Python's built-in types (`str`, `list`, `dict`) are already classes.
 
 ---
