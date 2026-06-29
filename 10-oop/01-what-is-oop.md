@@ -31,7 +31,7 @@ print(satya_balance)  # 800 — wrong! should be 750
                       # No error. No warning. Silent bug.
 ```
 
-**Why does this happen?** In procedural code, the data (`satya_balance`) and the function that changes it (`withdraw`) are two separate things connected only by convention — you have to remember to pass the right variable *and* reassign the result. Forget either step and you get a wrong answer with no feedback from Python.
+**Why does this happen?** In procedural code, the data (`satya_balance`) and the function that changes it (`withdraw`) are two separate things connected only by convention, you have to remember to pass the right variable *and* reassign the result. Forget either step and you get a wrong answer with no feedback from Python.
 
 ```python
 # ───── WITH OOP — the bug becomes impossible ──────────────
