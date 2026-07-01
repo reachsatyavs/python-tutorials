@@ -315,6 +315,139 @@ print(f"  Engineers: {[e.name for e in engineers]}")
 
 ---
 
+## Multiple Inheritance
+
+Python allows a class to inherit from **more than one parent** at the same time.
+
+```python
+class Flyable:
+    def fly(self):
+        return "I can fly!"
+
+class Swimmable:
+    def swim(self):
+        return "I can swim!"
+
+# Duck inherits from BOTH
+class Duck(Flyable, Swimmable):
+    def __init__(self, name):
+        self.name = name
+
+    def quack(self):
+        return f"{self.name} says Quack!"
+
+
+d = Duck("Donald")
+print(d.fly())    # from Flyable   ✅
+print(d.swim())   # from Swimmable ✅
+print(d.quack())  # own method     ✅
+```
+
+**Output:**
+```
+I can fly!
+I can swim!
+Donald says Quack!
+```
+
+`Duck` gets `fly()` from `Flyable`, `swim()` from `Swimmable`, and defines its own `quack()`. Each parent contributes one ability — this is called a **mixin** pattern and is the cleanest use of multiple inheritance.
+
+---
+
+## The Diamond Problem — When Both Parents Have the Same Method
+
+Multiple inheritance gets complicated when two parents define the **same method name**:
+
+```
+        A
+       / \
+      B   C
+       \ /
+        D
+```
+
+```python
+class A:
+    def hello(self):
+        return "Hello from A"
+
+class B(A):
+    def hello(self):
+        return "Hello from B"
+
+class C(A):
+    def hello(self):
+        return "Hello from C"
+
+class D(B, C):   # inherits from both B and C — who wins?
+    pass
+
+
+d = D()
+print(d.hello())   # "Hello from B"
+```
+
+**Output:**
+```
+Hello from B
+```
+
+Python solves this with **MRO — Method Resolution Order**. It follows a left-to-right rule: whichever parent is listed first in `class D(B, C)` wins.
+
+### Inspecting the MRO
+
+```python
+print(D.__mro__)
+# (<class 'D'>, <class 'B'>, <class 'C'>, <class 'A'>, <class 'object'>)
+
+# or more readable:
+print([c.__name__ for c in D.__mro__])
+# ['D', 'B', 'C', 'A', 'object']
+```
+
+Python walks this chain **left to right** and picks the **first class that has the method**:
+
+```
+D → no hello()
+B → has hello() ✅ — stops here, returns "Hello from B"
+```
+
+If `B` did not have `hello()`, Python would continue to `C`, then `A`, then `object`.
+
+### Calling `super()` in a chain
+
+```python
+class A:
+    def hello(self):
+        return "A"
+
+class B(A):
+    def hello(self):
+        return "B → " + super().hello()   # super() follows MRO, not just parent
+
+class C(A):
+    def hello(self):
+        return "C → " + super().hello()
+
+class D(B, C):
+    def hello(self):
+        return "D → " + super().hello()
+
+
+print(D().hello())   # D → B → C → A
+```
+
+**Output:**
+```
+D → B → C → A
+```
+
+`super()` does not mean "call my direct parent" — it means "call the **next class in the MRO**". This is how all three `hello()` methods get called in the right order.
+
+> **Rule:** Use multiple inheritance only for simple, independent mixins (like `Flyable`, `Swimmable`). Avoid diamond hierarchies where multiple parents share the same method — they are hard to reason about. See `[11-multiple-inheritance.md](11-multiple-inheritance.md)` for a deeper dive and real-world mixin patterns.
+
+---
+
 ## `isinstance()` and `issubclass()`
 
 ```python
@@ -362,8 +495,10 @@ class Dog(Animal):
 - Use `super().__init__(...)` to call the parent constructor.
 - **Method overriding** = child defines a method with the same name as the parent's.
 - `isinstance(obj, Class)` checks the inheritance chain, not just the exact type.
+- **Multiple inheritance** = `class Child(A, B):` — inherits from both parents.
+- Python's **MRO** resolves conflicts left-to-right; inspect it with `ClassName.__mro__`.
 - Prefer **composition** over inheritance when the relationship is HAS-A, not IS-A.
 
 ---
 
-*← [07 — Encapsulation](07-encapsulation.md) · [→ 09 — Polymorphism](09-polymorphism.md)*
+*← [07 — Encapsulation](07-encapsulation.md) · [→ 09 — Polymorphism](09-polymorphism.md) · [→ 11 — Multiple Inheritance (deep dive)](11-multiple-inheritance.md)*

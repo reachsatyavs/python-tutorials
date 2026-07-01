@@ -20,6 +20,7 @@ OOP is a way of organising code around **objects** — bundles of data and behav
 | 8 | `[08-inheritance.md](08-inheritance.md)` | Notes | Parent/child classes, `super()`, method overriding |
 | 9 | `[09-polymorphism.md](09-polymorphism.md)` | Notes | Same interface, different behaviour, duck typing |
 | 10 | `[10-abstraction.md](10-abstraction.md)` | Notes | `ABC`, `@abstractmethod`, defining contracts |
+| 11 | `[11-multiple-inheritance.md](11-multiple-inheritance.md)` | Notes | Multiple inheritance, mixins, diamond problem, MRO, `super()` in chains |
 | — | `[oop_basics.py](oop_basics.py)` | Script | 10 runnable examples — class, object, init, self, variables, methods |
 | — | `[oop_advanced.py](oop_advanced.py)` | Script | 10 runnable examples — encapsulation, inheritance, polymorphism, abstraction |
 
